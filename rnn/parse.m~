@@ -1,0 +1,4 @@
+pos_dir = '/home/bcv/Documents/thesis/aclImdb/train/pos/';
+neg_dir = '/home/bcv/Documents/thesis/aclImdb/train/neg/';
+
+dir(pos)
