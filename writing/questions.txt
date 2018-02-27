@@ -1,0 +1,25 @@
+Definition 1: The gradient distribution for a token x_n in a series of tokens is
+    (x_m-x_n) del f(x_n) for all x_m in the vocabulary
+
+Question 1: Does the same word have the same gradient distribution independent of
+    position in the review?  What about similar words?  What about across reviews?
+
+Definition 2: The distance-gradient distribution for a token x_n in a series of tokens
+    is ( [x_m-x_n] del f(x_n), |x_m-x_n| )
+
+Question 2: Does the same word have the same distance-gradient distribution regardless
+    of position in the review?  Similar words?  Across reviews?
+
+Notes: It seems that the gradient distribution is at least, some kind of distribution,
+    looking roughly Gaussian.  Similar words seem to have similar distributions, at
+    least ignoring the end of a review where words tend to lose saliency.  Words like
+    'the' tend to have a small
+
+Question 3: is (x_m-x_n) del f(x_n) a suitable approximation to the loss function?  
+    That is, what is the actual change in the function with regards to this value?
+
+Question 4: Does changing a token from x_n to x_m significantly effect gradient 
+    distributions of other words?  This should not be the case if the answer to 
+    question 1 is yes.
+
+Question 5: Does the distribution itself matter or only the maximum reachable value?

@@ -1,0 +1,47 @@
+Adversarial examples were originally defined in the domain of image classification in the form of a constrained optimization problem.  The following definition is similar to \cite{cs14}.\\
+
+\noindent
+\textbf{Definition.} An adversarial derivation, $x + r \in \mathbb{R}^m$, of a an image, $x \in \mathbb{R}^m$ for a classifier, $f$, is the solution to the following optimization problem:\\
+\noindent
+minimize $||r||_2$ subject to:
+\begin{enumerate}
+\item $f(x + r) \neq f(x)$
+\item $x+r \in [0,1]^m$
+\end{enumerate}
+We may also denote the adversarial derivation as $x^* = x + r$\\
+
+\noindent
+In words, an adversarial derivation is a sample with the minimum distance to a true sample such that it is classified as something different.  We also require that every element stays in the interval $x_n+r_n \in [0,1]$ because actual pixels must remain in some constant bounded interval.\\
+
+\noindent
+Clearly, this definition does not translate well to natural language which is not even numeric.  We give a more general constrained optimization defintion below, which we will adapt to the problem of creating adversarial derivations for text.\\
+
+\noindent
+\textbf{Definition.} An adversarial derivation (AD) of $x$ with difference $\epsilon$, domain metric $d_D$, and codomain metric $d_C$ is given by\\
+\begin{equation*}
+\begin{aligned}
+& \underset{x^*\in D(f)}{\text{minimize}}
+& & d_D(x,x^*) \\
+& \text{subject to}
+& & d_C(f(x),f(x^*)) > \epsilon
+\end{aligned}
+\end{equation*}
+
+\noindent
+Where $d_D$ and $d_C$ are distance metrics defined on the domain of $f$ and codomain of $f$, respectively, and $\epsilon > 0$  Note that image classifier would have the domain $[0,1]^m$ and codomain $ \{0,1,...K\} $ where $K$ is the number of classes.  So the definition of an adversarial derivation for an image classifier is the same as the general definition if we let $\epsilon = 1$, $d_D(x,x^*) = ||x-x^*||^2$, $d_C(y,y^*) = |y-y^*|$.
+
+As long as the model, $f$, has a non-singleton codomain, a solution to this optimization problem exists for small enough $\epsilon$.  This is true from the fact that for any distance metric, $d(y,y^*) > 0$ for $y \neq y^*$.  That being said, the distance between the sample and the derived sample may be so large that they are easily recognized to be different samples.  We therefore define a similar problem with very different properties.\\
+
+\noindent
+\textbf{Definition.} An absolutely adversarial derivation (AAD) of $x$ with similarity $\delta$, difference $\epsilon$, domain metric $d_D$, and codomain metric $d_C$ is given by any solution to the following two constraints.
+
+\begin{equation*}
+\begin{aligned}
+& & d_D(x,x^*) < \delta\\
+& & d_C(f(x),f(x^*)) > \epsilon
+\end{aligned}
+\end{equation*}
+
+In this less relaxed version of the problem, a solution may not exist.  In fact, for a given continuous model $f$, and $\epsilon$ it is guaranteed that $\exists \delta > 0 \text{ s.t. } d_C(f(x),f^*(x)) < \epsilon$ meaning no solution exists.  However, it appeals to a more intuitive concept and allows for the possibility of a model immune to adversarial attacks.  It says that the sample and it's absolute adversarial derivation must be sufficiently close and the distance between the model outputs must be sufficiently far.  
+
+It is easy to see that if an AAD exists for a given sample, then any AD is also an AAD.  This means we may solve the more relaxed problem to obtain a valid solution, and so we will work with the more practicable objective of creating adversarial derivations.

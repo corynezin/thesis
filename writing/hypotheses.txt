@@ -1,0 +1,5 @@
+H1: Words with large cumulative saliencies (sum of gradients across word vector)
+    tend to have large saliencies across the entire vector
+
+H2: More generally, all words tend to have similar saliencies throughout their
+    word vectors.
