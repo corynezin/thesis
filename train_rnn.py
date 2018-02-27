@@ -39,7 +39,6 @@ max_time = 1024   # Maximum number of words in a given review
 emb_dict = np.load('emb_dict.npy').item()
 embeddings = np.load('final_embeddings.npy')
 
-
 for hidden_size,lr in zip([2,4,8,16,32,64,128]*2,[0.01,0.001]*7):
   # Reset the TensorFlow graph
   g = tf.Graph()

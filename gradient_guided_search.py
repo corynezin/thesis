@@ -69,16 +69,16 @@ with g.as_default():
             D = W @ (G.T)
             c = np.sum(np.multiply(rv.vector_list,G),axis=1)
             d = D - c
-            n = np.linalg.norm(G,axis=0)
-            top_idx = np.argsort(n)[0:num_top]
+            n = np.linalg.norm(G,axis=1)
+            top_idx = np.argsort(n)[-num_top:]
             actual = np.zeros((10000,num_top))
             for i in range(0,10000,per_batch):
                 _,p,_ = r.infer_batched_prob(sess,rv,i,per_batch,top_idx)
                 actual[i:i+per_batch,:] = \
                     np.reshape(p[:,0] - probability[0][0],(50,10))
-            np.save('./ggs_results/diffs/'+test_file[0:-4]+'.npy',actual)
-            np.save('./ggs_results/grads/'+test_file[0:-4]+'.npy',G)
-            np.save('./ggs_results/probs/'+test_file[0:-4]+'.npy',probability)
+            np.save('./ggs2_results/diffs/'+test_file[0:-4]+'.npy',actual)
+            np.save('./ggs2_results/grads/'+test_file[0:-4]+'.npy',G)
+            np.save('./ggs2_results/probs/'+test_file[0:-4]+'.npy',probability)
 
 
 

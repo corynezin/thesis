@@ -28,7 +28,7 @@ with g.as_default():
 
     with tf.Session() as sess:
         # Load RNN weights
-        tf.train.Saver().restore(sess, './gridckpt_16_10/imdb-rnn-e15.ckpt')
+        tf.train.Saver().restore(sess, './ckpts/gridckpt_16_10/imdb-rnn-e15.ckpt')
         review = open('./aclImdb/test/posneg/9999_10.txt').read()
         print(review)
         tokens = preprocess.tokenize(review)
@@ -64,7 +64,7 @@ with g.as_default():
         word_index = [i for i in range(n)]
         random.shuffle(word_index)
         adv_inputs = inputs
-        for _ in range(5): 
+        for _ in range(0): 
             for index in word_index:
                 decision,probability,pos_grad = \
                 sess.run([r.decision,r.probability,r.pos_grad],
@@ -73,7 +73,8 @@ with g.as_default():
                          r.targets:targets,
                          r.sequence_length:sequence_length,
                          r.keep_prob:1.0})
-                pg = pos_grad[0][0,0:n,:]; ps = np.sum(np.abs(pg),axis=1)
+                pg = pos_grad[0][0,0:n,:]; 
+                ps = np.sqrt(np.sum(np.abs(pg)**2,axis=1))
                 gs = np.sign(pg[index,:])
                 emb_idx = int(adv_inputs[0,index])
                 emb_val = word_embedding[emb_idx]

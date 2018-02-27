@@ -35,32 +35,53 @@ normalized_word_embedding = word_embedding / embedding_norm
 m = word_to_embedding_index
 # Reverse dictionary to look up words from indices
 embedding_index_to_word = dict(zip(m.values(), m.keys()))
-rv = rp.review('./aclImdb/test/posneg/9537_1.txt')
-rv.translate(1024,word_to_embedding_index,embedding_index_to_word)
 
-global_step_tensor = tf.Variable(0, trainable = False, name = 'global_step')
-r = rnn.classifier(
-    batch_size = 1,
-    learning_rate = 0.0,
-    hidden_size = 16, 
-    max_time = 1024,
-    embeddings = word_embedding,
-    global_step = global_step_tensor
-)
+root = './aclImdb/test/posneg/'
+for filename in os.listdir('./ggs_results/diffs/'):
+    rv = rp.review(root + filename[0:-4]+'.txt')
+    diff = np.load('./ggs_results/diffs/'+filename)
+    prob = np.load('./ggs_results/probs/'+filename)
+    print('Filename: ',filename,'Initial Probability: ',prob[0][0])
+    if rv.sentiment == 'pos':
+        m = np.amin(diff)
+    else:
+        m = np.amax(diff)
+    prob_positive = prob[0,0] + m
+    # Following are conditions where one-word replacement worked.
+    if prob_positive < 0.5 and rv.sentiment == 'pos':
+        continue
+    elif prob_positive > 0.5 and rv.sentiment == 'neg':
+        continue
+    g = tf.Graph()
+    tf.reset_default_graph()
+    rv.translate(1024,word_to_embedding_index,embedding_index_to_word)
+    with g.as_default():
+        global_step_tensor = tf.Variable(0, trainable = False, name = 'global_step')
+        # Create RNN graph
+        r = rnn.classifier(
+            batch_size = rv.length,
+            learning_rate = 0.0,
+            hidden_size = 16,
+            max_time = 1024,
+            embeddings = word_embedding,
+            global_step = global_step_tensor
+        )
+        with tf.Session() as sess:
+            tf.train.Saver().restore(sess, './ckpts/gridckpt_16_10/imdb-rnn-e15.ckpt')
+            rv.translate(r.max_time,word_to_embedding_index,embedding_index_to_word)
+            rv.vec(word_embedding)
+            decision, probability = \
+                r.infer_rep_dpg(sess,rv,rv.index_vector[0])
 
-with tf.Session() as sess:
-    tf.train.Saver().restore(sess, './ckpts/gridckpt_16_10/imdb-rnn-e15.ckpt')
-    grad,prob = sess.run([r.pos_grad,r.probability],
-        feed_dict={
-            r.sequence_length:[rv.length],
-            r.inputs:rv.index_vector,
-            r.targets:np.array([[1,0]]),
-            r.keep_prob:1.0
-        })
-
-    g = grad[0][0,1:rv.length,:]
-    n = np.norm(g,axis=1)
-    plot(np.sort(n))
-    plt.imshow(g)
-    plt.show()
-    
+            #grad = batch_grad[0][0,0:rv.length,:]
+            #W = word_embedding; G = grad
+            #D = W @ (G.T)
+            #c = np.sum(np.multiply(rv.vector_list,G),axis=1)
+            #d = D - c
+            actual = np.zeros((10000,rv.length))
+            for i in range(10000):
+                _,p = r.infer_rep_dpg(sess,rv,i)
+                actual[i,:] = p[:,0] - probability[0][0]
+                if not (i % 100):
+                    print(i,np.amin(actual),np.amax(actual))
+            np.save('./cs_results/'+filename[0:-4]+'.npy',actual)

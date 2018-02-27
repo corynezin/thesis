@@ -92,15 +92,15 @@ class classifier:
         np.fill_diagonal(index_matrix,word_index)
         target_matrix = np.tile(rv.targets,(rv.length,1))
 
-        decision, probability, grad = \
-            sess.run([self.decision,self.probability,self.pos_grad],
+        decision, probability = \
+            sess.run([self.decision,self.probability],
                 feed_dict = \
                     {self.inputs:index_matrix,
                      self.targets:target_matrix,
                      self.sequence_length:[rv.length]*rv.length,
                      self.keep_prob:1.0})
 
-        return decision, probability, grad
+        return decision, probability
 
     def infer_batched_prob(self,sess,rv,word_index,per_batch,top_idx):
         num_top = self.batch_size//per_batch
