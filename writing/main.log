@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.11.27)  26 FEB 2018 19:31
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.11.27)  2 MAR 2018 18:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -364,6 +364,30 @@ Package: xparse 2016/01/19 v6377 L3 Experimental document command parser
 \l__xparse_mandatory_args_int=\count130
 \l__xparse_processor_int=\count131
 \l__xparse_v_nesting_int=\count132
+)
+(/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen154
+)
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2016/02/04 v1.7-139 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 67.
+\captionmargin=\dimen155
+\captionmargin@=\dimen156
+\captionwidth=\dimen157
+\caption@tempdima=\dimen158
+\caption@indent=\dimen159
+\caption@parindent=\dimen160
+\caption@hangindent=\dimen161
+)
+\c@ContinuedFloat=\count133
+)
+(/usr/share/texlive/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2016/02/20 v1.1-142 Sub-captions (AR)
+\c@subfigure=\count134
+\c@subtable=\count135
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2015/03/17 v1.2c Input encoding file
@@ -764,59 +788,63 @@ Package ifvtex Info: VTeX not detected.
 (/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty
 Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 )
-\Gm@cnth=\count133
-\Gm@cntv=\count134
-\c@Gm@tempcnt=\count135
-\Gm@bindingoffset=\dimen154
-\Gm@wd@mp=\dimen155
-\Gm@odd@mp=\dimen156
-\Gm@even@mp=\dimen157
-\Gm@layoutwidth=\dimen158
-\Gm@layoutheight=\dimen159
-\Gm@layouthoffset=\dimen160
-\Gm@layoutvoffset=\dimen161
+\Gm@cnth=\count136
+\Gm@cntv=\count137
+\c@Gm@tempcnt=\count138
+\Gm@bindingoffset=\dimen162
+\Gm@wd@mp=\dimen163
+\Gm@odd@mp=\dimen164
+\Gm@even@mp=\dimen165
+\Gm@layoutwidth=\dimen166
+\Gm@layoutheight=\dimen167
+\Gm@layouthoffset=\dimen168
+\Gm@layoutvoffset=\dimen169
 \Gm@dimlist=\toks23
 )
 .................................................
 . LaTeX info: "xparse/define-command"
 . 
-. Defining command \E with sig. 's m' on line 18.
+. Defining command \E with sig. 's m' on line 21.
 .................................................
  (./main.aux
-(./problem.aux))
+(./problem.aux
+
+LaTeX Warning: Label `fig:saliency' multiply defined.
+
+))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 19.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 19.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 24.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 24.
  (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    ... okay on input line 24.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count136
-\scratchdimen=\dimen162
+\scratchcounter=\count139
+\scratchdimen=\dimen170
 \scratchbox=\box43
-\nofMPsegments=\count137
-\nofMParguments=\count138
+\nofMPsegments=\count140
+\nofMParguments=\count141
 \everyMPshowfont=\toks24
-\MPscratchCnt=\count139
-\MPscratchDim=\dimen163
-\MPnumerator=\count140
-\makeMPintoPDFobject=\count141
+\MPscratchCnt=\count142
+\MPscratchDim=\dimen171
+\MPnumerator=\count143
+\makeMPintoPDFobject=\count144
 \everyMPtoPDFconversion=\toks25
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
@@ -862,6 +890,9 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -901,127 +932,92 @@ e
 (./problem.tex
 Chapter 1.
 (./adversarial_examples.tex
-Underfull \hbox (badness 10000) in paragraph at lines 1--2
+LaTeX Font Info:    Try loading font information for U+msa on input line 1.
 
- []
-
-LaTeX Font Info:    Try loading font information for U+msa on input line 4.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 4.
+LaTeX Font Info:    Try loading font information for U+msb on input line 1.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-Underfull \hbox (badness 10000) in paragraph at lines 11--12
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 13--15
-
- []
-
-[1
+) [1
 
 
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 16--18
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]) (./word_embeddings.te
+x [3] [4] [5])
+(./adversarial_text_derivation.tex [6] [7]) (./stochastic_gradient_analysis.tex
+[8]
 
- []
+LaTeX Warning: Reference `' on page 9 undefined on input line 48.
 
+<./images/delta_vs_deltahat.png, id=41, 1339.1631pt x 738.5994pt>
+File: ./images/delta_vs_deltahat.png Graphic file (type png)
 
-Underfull \hbox (badness 10000) in paragraph at lines 19--21
+<use ./images/delta_vs_deltahat.png>
+Package pdftex.def Info: ./images/delta_vs_deltahat.png used on input line 52.
+(pdftex.def)             Requested size: 416.83289pt x 229.89886pt.
 
- []
+<./images/total_color.png, id=43, 397.485pt x 758.835pt>
+File: ./images/total_color.png Graphic file (type png)
 
+<use ./images/total_color.png>
+Package pdftex.def Info: ./images/total_color.png used on input line 61.
+(pdftex.def)             Requested size: 168.81502pt x 322.2864pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 33--34
+<./images/L2_color.png, id=44, 397.485pt x 758.835pt>
+File: ./images/L2_color.png Graphic file (type png)
 
- []
-
-
-Overfull \hbox (7.94542pt too wide) in paragraph at lines 45--46
-\OT1/cmr/m/n/12 a given con-tin-u-ous model $\OML/cmm/m/it/12 f$\OT1/cmr/m/n/12
- , and $\OML/cmm/m/it/12 ^^O$ \OT1/cmr/m/n/12 it is guar-an-teed that $\OMS/cms
-y/m/n/12 9\OML/cmm/m/it/12 ^^N > \OT1/cmr/m/n/12 0[]\OML/cmm/m/it/12 d[]\OT1/cm
-r/m/n/12 (\OML/cmm/m/it/12 f\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x\OT1/cmr/m/n/12 
-)\OML/cmm/m/it/12 ; f[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x\OT1/cmr/m/n/12 )) \O
-ML/cmm/m/it/12 <
- []
-
-[2]) (./text_classification.tex
-Underfull \hbox (badness 10000) in paragraph at lines 1--2
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 3--6
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 10--11
-
- []
-
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 12--15
-
- []
-
-)
-Underfull \hbox (badness 10000) in paragraph at lines 16--6
-
- []
-
-(./adversarial_text_derivation.tex
-Underfull \hbox (badness 10000) in paragraph at lines 1--3
-
- []
-
-[4]
-Underfull \hbox (badness 10000) in paragraph at lines 20--21
-
- []
-
-[5] <./images/saliency.png, id=29, 1339.1631pt x 738.5994pt>
+<use ./images/L2_color.png>
+Package pdftex.def Info: ./images/L2_color.png used on input line 67.
+(pdftex.def)             Requested size: 168.81502pt x 322.2864pt.
+ [9] [10 <./images/delta_vs_deltahat.png> <./images/total_color.png> <./images/
+L2_color.png>] [11]
+<./images/saliency.png, id=58, 1339.1631pt x 738.5994pt>
 File: ./images/saliency.png Graphic file (type png)
 
 <use ./images/saliency.png>
-Package pdftex.def Info: ./images/saliency.png used on input line 54.
+Package pdftex.def Info: ./images/saliency.png used on input line 101.
 (pdftex.def)             Requested size: 416.83289pt x 229.89886pt.
-)) [6] [7 <./images/saliency.png>] (./main.bbl)
-[8
+)) [12 <./images/saliency.png>] (./main.bbl)
+[13
 
 
-] (./main.aux (./problem.aux)) ) 
+] (./main.aux (./problem.aux))
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 11184 strings out of 493029
- 199767 string characters out of 6136233
- 230312 words of memory out of 5000000
- 14603 multiletter control sequences out of 15000+600000
- 10795 words of font info for 41 fonts, out of 8000000 for 9000
+ 12344 strings out of 493029
+ 220881 string characters out of 6136233
+ 251418 words of memory out of 5000000
+ 15744 multiletter control sequences out of 15000+600000
+ 11265 words of font info for 43 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,12n,40p,10383b,275s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmm
-i6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type
-1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (8 pages, 242649 bytes).
+ 38i,14n,41p,10376b,458s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
+6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on main.pdf (13 pages, 783214 bytes).
 PDF statistics:
- 82 PDF objects out of 1000 (max. 8388607)
- 57 compressed objects within 1 object stream
+ 116 PDF objects out of 1000 (max. 8388607)
+ 77 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

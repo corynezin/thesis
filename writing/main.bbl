@@ -31,4 +31,14 @@ T.~{Mikolov}, I.~{Sutskever}, K.~{Chen}, G.~{Corrado}, and J.~{Dean},
   ``{Distributed Representations of Words and Phrases and their
   Compositionality},'' \emph{ArXiv e-prints}, Oct. 2013.
 
+\bibitem{am11}
+\BIBentryALTinterwordspacing
+A.~L. Maas, R.~E. Daly, P.~T. Pham, D.~Huang, A.~Y. Ng, and C.~Potts,
+  ``Learning word vectors for sentiment analysis,'' in \emph{Proceedings of the
+  49th Annual Meeting of the Association for Computational Linguistics: Human
+  Language Technologies}.\hskip 1em plus 0.5em minus 0.4em\relax Portland,
+  Oregon, USA: Association for Computational Linguistics, June 2011, pp.
+  142--150. [Online]. Available: \url{http://www.aclweb.org/anthology/P11-1015}
+\BIBentrySTDinterwordspacing
+
 \end{thebibliography}

@@ -2,7 +2,7 @@ Consider the common scenario of a text classifier which maps plain text files to
 
 \noindent
 \textbf{Definition.}
-Let $s$ be a sequence of characters.  Let $a_n \in \{0,1,\dots,V\} \forall n \in \{0,1,\dots,N\}$ and $E:s\rightarrow \{a_n\}_{n=1}^{N_s}$ then we call $E$ an encoder, $V$ the encoder vocabulary size, and $N_s$ the sample length with respect to $E$.\\
+Let $s$ be a sequence of characters.  Let $a_n \in \{1,2,\dots,V\} \forall n \in \{1,2,\dots,N\}$ and $E:s\rightarrow \{a_n\}_{n=1}^{N_s}$.  Then we call $E$ an encoder, $V$ the encoder vocabulary size, and $N_s$ the sample length with respect to $E$.\\
 
 \noindent
 In plain words, an encoder maps a string to a sequence of bounded integers.  The sequence is some length which depends on both the encoder and the string.  We assume a fixed encoder, and therefore vocabulary size, $V$.  Since, after encoding, the distance between one word and another is arbitrary, we further translate into a one-hot encoded vector.  That is, the integer $n$ is mapped to a vector where the $n^{th}$ element is $1$ and all others are $0$.  This ensures that all vectors representing words are unit norm and the distance between any two different words is the same.  We denote the set of one-hot encoded vectors of size $V$ as $1_V$
@@ -15,3 +15,5 @@ Let $f: 1_V \rightarrow \mathbb{R}^D$.  We call $f$ a word embedding and we call
 
 \noindent
 Let $W \in M_{D\times V}(\mathbb{R})$.  Then clearly any word embedding, $f$, of size $D$ may be represented as the matrix multiplication $Wv$ $\forall v \in 1_V$.  The matrix $W$ is called the embedding matrix.\\
+
+
