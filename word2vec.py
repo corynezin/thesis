@@ -30,7 +30,7 @@ import numpy as np
 from six.moves import urllib
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
-
+data_index = 0
 def w2v(corpus_filename = './corpus/imdb_train_corpus.txt'):
     f = open(corpus_filename,'r')
     vocabulary = tf.compat.as_str(f.read()).split()
@@ -65,12 +65,10 @@ def w2v(corpus_filename = './corpus/imdb_train_corpus.txt'):
     # reverse_dictionary - maps codes(integers) to words(strings)
     data, count, dictionary, reverse_dictionary = build_dataset(vocabulary,
                                                                 vocabulary_size)
-    np.save('word_to_index.npy',dictionary)
+    np.save('word_to_index2.npy',dictionary)
     del vocabulary  # Hint to reduce memory.
     print('Most common words (+UNK)', count[:5])
     print('Sample data', data[:10], [reverse_dictionary[i] for i in data[:10]])
-
-    data_index = 0
 
     # Step 3: Function to generate a training batch for the skip-gram model.
     def generate_batch(batch_size, num_skips, skip_window):
@@ -215,4 +213,7 @@ def w2v(corpus_filename = './corpus/imdb_train_corpus.txt'):
       #CHANGE: un-normalized
       final_embeddings = embeddings.eval()
       print(final_embeddings)
-      np.save('index_to_vector.npy',final_embeddings)
+      np.save('index_to_vector2.npy',final_embeddings)
+
+if __name__ == '__main__':
+    w2v()

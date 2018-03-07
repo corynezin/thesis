@@ -54,9 +54,9 @@ with g.as_default():
         
         print('Probability: ', probability)
         n = len(tokens)
-        pg = pos_grad[0][0,0:n,:]; ps = np.sum(np.abs(pg),axis=1)
+        pg = pos_grad[0][0,0:n,:]; ps = np.linalg.norm(pg,axis=1)
         ng = neg_grad[0][0,0:n,:]; ns = np.sum(np.abs(ng),axis=1)
-        pas = np.abs(np.sum(pg,axis=1)); nas = np.abs(np.sum(ng,axis=1))
+        pas = np.sum(pg,axis=1); nas = np.abs(np.sum(ng,axis=1))
         #print('Salience: ',[ps,ns])
         x = np.linspace(1,n,num=n)
         lookup = [embedding_index_to_word.get(inputs[0][i],'UNK') for i in range(n)]
@@ -92,6 +92,16 @@ with g.as_default():
 
         start = 0; end = 50
         if int(sys.argv[1]):
+            a = []
+            for i in range(114):
+                a.append(word_embedding[int(inputs[0][i]),:])
+            a = np.array(a)
+            print(a.shape)
+            b = np.sum(np.multiply(pg,a),axis=0)
+            print(b)
+            print(b[16])
+            print(pas[16])
+            print(ps[16])
             ax = plt.subplot(121)
             plt.suptitle("Saliency Visualization of Excerpt",fontsize=24)
             y = np.linspace(start,end-1,num=end-start)
@@ -101,11 +111,11 @@ with g.as_default():
             ax.set_aspect(3.05)
             ax = plt.subplot(122)
             plt.yticks(y.max()-y, lookup)
-            putil.vstem(y.max()-y,ps[start:end],'b',label="Cumulative Absolute Gradient")
-            putil.vstem(y.max()-y,pas[start:end],'r',label="Cumulative Gradient")
+            putil.vstem(y.max()-y-y[1]/3,ps[start:end],'b',label="Gradient Norm")
+            putil.vstem(y.max()-y,pas[start:end],'r',label="Total Gradient")
             plt.legend()
-            plt.xlabel("Cumulative Saliency", fontsize=22)
-            plt.xlim([ps.max(),0]) 
+            plt.xlabel("Gradient Measure", fontsize=22)
+            plt.xlim([pas.min(),pas.max()]) 
             plt.ylim([-1,y.max()+1])
             plt.grid()
             plt.show()
