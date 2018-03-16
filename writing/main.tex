@@ -21,12 +21,14 @@
 }
 \newenvironment{definition}[1][Definition.]{\begin{trivlist}                         
   \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\setcounter{MaxMatrixCols}{20}
 \begin{document}
 \bibliographystyle{IEEEtran}
-%\include{background}
-%\include{introduction}
 \doublespacing
-\include{problem}
+\include{background}
+%\include{introduction}
+%\include{problem}
+%\include{results}
 
 \bibliography{references}{}
 \end{document}

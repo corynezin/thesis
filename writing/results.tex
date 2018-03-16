@@ -1,0 +1,12 @@
+\chapter{Gradient Guided Search}
+In our preliminary examination of the data, we saw that a sample which was very confidently and correctly labeled as positive, could be confidently mislabeled by switching only a single word with another.  If we are attempting to generate discrete adversarial examples, we may simply attempt replacing every word in the sample with every possible word in the vocabulary.  The number of classifications would then be $V\times N$ which is of course very large and therefore even replacing one word is time consuming.  If it turns out we must replace $m>1$ words, this task requires 
+\begin{equation}
+N(m) = (V\times N)(V\times (N-1))\dots(V\times (N-m)) = \frac{V^m N!}{(N-m)!}
+\end{equation}
+classifications making it an intractable problem.
+
+Using the approximated delta to determine good candidate words for switching resulted in relatively poor results, with the largest values giving only modest actual changes in prediction confidence.  Instead of determining pairs of words to swap directly, we use measures of the gradient to determine the top candidate words in the text sample and swap them with every other word in the vocabulary.  If we search the words with the top $k$ gradient norms, then replacing $m$ words requires
+\begin{equation}
+N(m) = (V\times k)^m
+\end{equation}
+classifications.  This method is still untractable for even modest $m$ since the vocabulary is so large.  However, as discussed in chapter \ref{}, empirical results for our classification architecture and data set that at least 73.3\% of samples correctly labeled by our architecture can be altered by just one word and then mislabeled.
