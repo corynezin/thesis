@@ -80,10 +80,14 @@ Latent semantic analysis (LSA) is essentially a dimensionality reduction techniq
 \item Populate the term-document matrix, $M$: $M_{i,j} = tf(t_i,d_j)$
 \item Using SVD, decompose $M$: $M = U\Sigma V^*$.  $U$ and $V$ are unitary while $\Sigma$ is diagonal.
 \item Keep the largest $k$ diagonal values in $\Sigma$, remove the other values' rows and columns and call the resulting matrix $\hat{\Sigma}$.
-\item The vector corresponding to the $i^{th}$ word can be computed as $\hat{\Sigma}^{-1}V_k t_i$
+\item The vector corresponding to the $i^{th}$ word is the transpose of the $i^{th}$ row of $U\hat{\Sigma}$, a vector of $k$ elements.
 \end{enumerate}
+\noindent
+Using this method, words which appear in similar frequency across similar types of documents will have similar vectors, in the sense of cosine similarity.  Sample noise is reduced by the dimensionality reduction achieved by truncating $\Sigma$.
 
 \subsection{Word2vec}
-Word2vec is an extremely useful model which learns vector representations of individual words.  Word vectors are learned in an unsupervised fashion, meaning that very large, unlabeled datasets can be leveraged during training.  
+Word2vec is an extremely useful model which learns vector representations of individual words.  Word vectors are learned in an unsupervised fashion, meaning that very large, unlabeled datasets can be leveraged during training.  There are two word2vec models which are complementary:  Continuous Bag-of-Words (CBOW) and Continous Skip-gram (Skip-gram).  Continous Bag-of-Words aims to create vectors which maximize accuracy of classifying a word given its surrounding words.  Skip-gram aims to create vectors which maximize the accuracy of predicting surrounding words given the cener word.
+
+The model used for word prediction is very
 
 
