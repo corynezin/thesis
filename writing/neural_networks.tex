@@ -1,1 +1,37 @@
-neural nets are cool
+A neural network is a class of mathematical function which uses non-linearities in order to increase representational power as compared to simple linear models.  They differ from other non-linear models like logistic regression by having multiple ``layers'' of nonlinearity between the input and the output.  These non-linearities are called \textit{activiation functions}.  We now discuss one of the simplest neural networks to highlight and clarify some of these terms, the multilayer perceptron. 
+
+\subsection{Multilayer Perceptron}
+A multilayer perceptron is a function $f:\mathbb{R}^n\rightarrow \mathbb{R}^m$. Given some vector $x\in \mathbb{R}^n$ of inputs, the output vector $f(x)\in\mathbb{R}^m$ of a multilayer perceptron is given by equation \ref{eq:mlp}
+\begin{align}\label{eq:mlp}
+    f(x) = \vec{\sigma_p} \circ T_p \circ\cdots\circ \vec{\sigma_2}\circ T_2\circ \vec{\sigma_1} \circ T_1\circ x
+\end{align}
+The functions $T_1,\dots,T_p$ are assumed to be affine and often represented as matrix multiplications.  The functions $\vec{\sigma_1},\dots,\vec{\sigma_p}$ are assumed to be nonlinear, each of these is an activation function.  In order for equation \ref{eq:mlp} to make sense, we must assume that the dimensions of each function are compatible with one another.  As we will see in section \ref{sec:activation_functions}, activation functions are usually simple functions which operate on an element-by-element basis.  Here we say the neural network described by \ref{eq:mlp} has $p+1$ layers.  Each activation function adds a layer to the \textit{input layer} which consists of $x$ alone.  Note that the final activation function $\vec{\sigma}_p$ is optional.  It will usually be included if the neural network is performing a classification task and exluded if performing a regression task.
+
+\subsection{Universal Approximation Theorem}
+The simplest multilayer perceptron has three layers: the input, hidden, and output layers.  In this case, the network function is simply given by
+\begin{align}
+f(x) = T_2 \circ \vec{\sigma} \circ T_1 \circ x
+\end{align}
+Part of what makes neural networks of the above form so attractive is that they are simple yet powerful.  Given fairly weak constraints on the activation functions, it is possible to represent any univariate continous function on a compact set arbitrarily well with some $T_1,T_2$ with finite dimensional codomains. \cite{gc89} This has been proved for the $L^1$ norm, $L^2$ norm, and the $L^\infty$ norm.  To be specific, if we define a univariate \textit{sigmoidal} function as $\sigma: \mathbb{R}\rightarrow \mathbb{R}$ as any function satisfying
+\begin{align}
+\sigma(t) \rightarrow
+\begin{cases}
+1 \text{ as } t\rightarrow \infty\\
+0 \text{ as } t\rightarrow -\infty
+\end{cases}
+\end{align}
+We define $\vec{\sigma}$ as the vectorization of $\sigma$.  That is, 
+\begin{align}
+\vec{\sigma}(x)_i = \sigma(x_i)
+\end{align}
+The universal approximation theorem says that given a compact set, $I\subset \mathbb{R}^m$, $\epsilon > 0$, and this sigmoidal activation, we can pick $T_1,T_2$ such that any of the conditions in equations \ref{eq:linf}-\ref{eq:l2} could be met.
+\begin{align}
+\label{eq:linf}||f(x) - g(x)||_\infty &< \epsilon \text{ } \forall x\in I \\
+\label{eq:l1}||f(x) - g(x)||_1 &< \epsilon \text{ } \forall x\in I\\
+\label{eq:l2}||f(x) - g(x)||_2 &< \epsilon \text{ } \forall x\in I
+\end{align}
+for any function, $g(x)$ in $C(I)$, $L^1(I)$, or $L^2(I)$ respectively.
+
+However, as the author of \cite{gc89} writes, this theorem gives no upper bound on the dimensionality of the output of $T_1$ and posits that this value be be very large.  In addition, we are still left the task of determining the functions $T_1$ and $T_2$ which produce the desired results.  Since they are affine and $x$ is finite dimensional, they may be represented with matrices and so our task is to find the corresponding coefficients, this task is called training.  This is usually done with a very approximate algorithm, stochastic gradient descent, covered in section \ref{sec:sgd}.  
+
+The two main issues of training is that the algorithms are not exact, and the size of matrices required to represent our function may be too large to be comuptationally feasible. For these reasons, most neural network research is devoted to creating structures which facilitate learning or reduce the computational complexity of a model.  In section \ref{sec:rnn} we describe recurrent neural networks, a structure which is particularly efficient at learning features of time series.  In section \ref{sec:training} we discuss several training strategies which help learn the correct parameters as well as avoid the problem of overfitting.

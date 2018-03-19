@@ -21,9 +21,9 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-\bibitem{cm08}
-C.~D. Manning, P.~Raghavan, and H.~Sch\"{u}tze, \emph{Introduction to
-  Information Retrieval}.\hskip 1em plus 0.5em minus 0.4em\relax New York, NY,
-  USA: Cambridge University Press, 2008.
+\bibitem{gc89}
+G.~{Cybenko}, ``{Approximation by superpositions of a sigmoidal fucntion},''
+  \emph{Mathematics of control, signals and systems}, vol.~2, no.~4, pp.
+  303--314, 1989.
 
 \end{thebibliography}
