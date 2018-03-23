@@ -35,3 +35,7 @@ for any function, $g(x)$ in $C(I)$, $L^1(I)$, or $L^2(I)$ respectively.
 However, as the author of \cite{gc89} writes, this theorem gives no upper bound on the dimensionality of the output of $T_1$ and posits that this value be be very large.  In addition, we are still left the task of determining the functions $T_1$ and $T_2$ which produce the desired results.  Since they are affine and $x$ is finite dimensional, they may be represented with matrices and so our task is to find the corresponding coefficients, this task is called training.  This is usually done with a very approximate algorithm, stochastic gradient descent, covered in section \ref{sec:sgd}.  
 
 The two main issues of training is that the algorithms are not exact, and the size of matrices required to represent our function may be too large to be comuptationally feasible. For these reasons, most neural network research is devoted to creating structures which facilitate learning or reduce the computational complexity of a model.  In section \ref{sec:rnn} we describe recurrent neural networks, a structure which is particularly efficient at learning features of time series.  In section \ref{sec:training} we discuss several training strategies which help learn the correct parameters as well as avoid the problem of overfitting.
+
+\section{Training Algorithms}
+
+\section{Recurrent Neural Networks}

@@ -1,4 +1,4 @@
-\chapter{Gradient Guided Search}
+\chapter{Results}
 In our preliminary examination of the data, we saw that a sample which was very confidently and correctly labeled as positive, could be confidently mislabeled by switching only a single word with another.  If we are attempting to generate discrete adversarial examples, we may simply attempt replacing every word in the sample with every possible word in the vocabulary.  The number of classifications would then be $V\times N$ which is of course very large and therefore even replacing one word is time consuming.  If it turns out we must replace $m>1$ words, this task requires 
 \begin{equation}
 N(m) = (V\times N)(V\times (N-1))\dots(V\times (N-m)) = \frac{V^m N!}{(N-m)!}
@@ -10,3 +10,12 @@ Using the approximated delta to determine good candidate words for switching res
 N(m) = (V\times k)^m
 \end{equation}
 classifications.  This method is still untractable for even modest $m$ since the vocabulary is so large.  However, as discussed in chapter \ref{}, empirical results for our classification architecture and data set that at least 73.3\% of samples correctly labeled by our architecture can be altered by just one word and then mislabeled.
+
+\section{White Box}
+All details of model known, algorithm run directly on model.
+\section{Gray Box}
+General structure of model known including hyperparameters
+ algorithm run on stand-in model trained on same data, but not same model.
+\section{Black Box}
+Model is completely unknown, hyperparameters vary from stand-in model.
+
