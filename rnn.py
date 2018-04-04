@@ -121,9 +121,83 @@ class classifier:
                      self.keep_prob:1.0})
 
         return decision, probability, grad
-        
+       
+    # inserts all words at index 'insert_location' 
+    def infer_insert(self,sess,rv,insert_location,divs,top_k):
+        per = rv.length // divs
+        end = per*divs
+        new = per+1
+        index_matrix = np.zeros((self.batch_size,new),'int')
+        wim = np.reshape(rv.index_vector[0,0:end],(per,divs),'F')
+        wim = np.insert(wim,insert_location,0,axis=0)
+        wim = np.reshape(wim,(1,end+divs),'F')
+        target_matrix = np.tile(rv.targets,(self.batch_size,1))
+        for i in range(divs):
+            start = i*top_k; end = (i+1)*top_k
+            index_matrix[start:end,:] = np.tile(wim[0,new*i:new*(i+1)],(top_k,1))
+        #index_matrix = np.tile(wim,(self.batch_size//divs,1))
+        index_matrix[:,insert_location] = \
+            np.arange(self.batch_size) % (self.batch_size//divs)
+        d,p,g = sess.run( [self.decision, self.probability, self.pos_grad],
+            feed_dict = \
+                {
+                  self.inputs: index_matrix,
+                  self.targets: target_matrix,
+                  self.sequence_length: [new] * self.batch_size,
+                  self.keep_prob: 1.0
+                })
+        return d,p,g,index_matrix
 
+    def infer_swap(self,sess,rv,swap_location,divs,top_k):
+        per = rv.length // divs
+        end = per*divs
+        index_matrix = np.zeros((self.batch_size,per),'int')
+        wim = np.copy(np.reshape(rv.index_vector[0,0:end],(per,divs),'F'))
+        wim[swap_location,:] = 0
+        wim = np.reshape(wim,(1,end),'F')
+        target_matrix = np.tile(rv.targets,(self.batch_size,1))
+        replacement_vector = np.random.choice(np.arange(10000),size=self.batch_size)
+        for i in range(divs):
+            start = i*top_k; end = (i+1)*top_k
+            index_matrix[start:end,:] = np.tile(wim[0,per*i:per*(i+1)],(top_k,1))
+        index_matrix[:,swap_location] = replacement_vector
+            #np.arange(self.batch_size) % (self.batch_size//divs)
+        d,p,g = sess.run( [self.decision, self.probability, self.pos_grad],
+            feed_dict = \
+                {
+                  self.inputs: index_matrix,
+                  self.targets: target_matrix,
+                  self.sequence_length: [per] * self.batch_size,
+                  self.keep_prob: 1.0
+                })
+        return d,p,g,index_matrix,replacement_vector
 
+    def infer_window(self,sess,rv,word_index,window_size):
+        w = window_size
+        L = rv.length
+        n = word_index
+        n1 = n - w//2; n2 = n1 + w
+        if n1 >= 0 and n2 <= L:
+            i1 = n1; i2 = n2
+        elif n1 < 0 and n2 <= L:
+            i1 = 0; i2 = w
+        elif n1 >=0 and n2 > L:
+            i1 = L-w; i2 = L
+        else:
+            i1 = 0; i2 = rv.length
+        index_matrix = np.tile(rv.index_vector[0,i1:i2],(10000,1))
+        index_matrix[:,word_index-i1] = np.arange(10000)
+        target_matrix = np.tile(rv.targets,(self.batch_size,1))
+
+        d,p,g = sess.run( [self.decision, self.probability, self.pos_grad],
+            feed_dict = \
+                {
+                  self.inputs: index_matrix,
+                  self.targets: target_matrix,
+                  self.sequence_length: [w] * self.batch_size,
+                  self.keep_prob: 1.0
+                })
+        return d,p,g
 
 
 

@@ -24,7 +24,7 @@ We define $\vec{\sigma}$ as the vectorization of $\sigma$.  That is,
 \begin{align}
 \vec{\sigma}(x)_i = \sigma(x_i)
 \end{align}
-The universal approximation theorem says that given a compact set, $I\subset \mathbb{R}^m$, $\epsilon > 0$, and this sigmoidal activation, we can pick $T_1,T_2$ such that any of the conditions in equations \ref{eq:linf}-\ref{eq:l2} could be met.
+(One common choice for such a function in neural networks is the logistic function given by $\sigma(x) = \frac{1}{1-\exp(x)}$.)  The universal approximation theorem says that given a compact set, $I\subset \mathbb{R}^m$, $\epsilon > 0$, and this sigmoidal activation, we can pick $T_1,T_2$ such that any of the conditions in equations \ref{eq:linf}-\ref{eq:l2} could be met.
 \begin{align}
 \label{eq:linf}||f(x) - g(x)||_\infty &< \epsilon \text{ } \forall x\in I \\
 \label{eq:l1}||f(x) - g(x)||_1 &< \epsilon \text{ } \forall x\in I\\
@@ -36,6 +36,98 @@ However, as the author of \cite{gc89} writes, this theorem gives no upper bound 
 
 The two main issues of training is that the algorithms are not exact, and the size of matrices required to represent our function may be too large to be comuptationally feasible. For these reasons, most neural network research is devoted to creating structures which facilitate learning or reduce the computational complexity of a model.  In section \ref{sec:rnn} we describe recurrent neural networks, a structure which is particularly efficient at learning features of time series.  In section \ref{sec:training} we discuss several training strategies which help learn the correct parameters as well as avoid the problem of overfitting.
 
-\section{Training Algorithms}
+\section{Training Algorithms}\label{sec:training}
+Neural networks are highly nonlinear, non-convex functions and therefore very difficult to train efficiently.  We can think of any kind of machine learning training as being in a large field and trying to find the lowest valley or the highest peak.  Unfortunately, we cannot see the terrain around us and only have local information about our current point.  Stochastic gradient descent is the ubiquitous choice for almost every training scenario.  Powerful extensions of stochastic gradient descent have also been invented, such as the Adam optimizer.
 
-\section{Recurrent Neural Networks}
+\subsection{Newton's Method}
+If our weights are allowed to range over an open set (in fact they are usually over $\mathbb{R}$) then $\nabla L = 0$ is a necessary condition for the loss to be minimum.  This condition also guarantees we are at least at a global minimum or maximum.  This equation is usually not directly solvable for nonlinear functions like neural networks.  However, we can use Newton's method to successively approximate it.  In reference to the loss function discussed in chapter \ref{sec:machine_learning}, let $L(g,x,y) = L(w)$ where $w$ is the vector of weights for the neural network.  Applying Taylor's Formula to the gradient, we have:
+\begin{align}
+\nabla L(w+\Delta) &\approx \nabla L(w) + HL(w)\Delta
+\end{align}
+If we want to find the zero of $\nabla L$, we set $L(w+\Delta) = 0$ resulting in equation \ref{eq:newton}
+\begin{align}\label{eq:newton}
+\Delta &= -[HL(w)]^{-1}\nabla L(w)
+\end{align}
+where $H$ is the Hessian matrix of $L$.  This yields the update step in equation \ref{eq:newtons}
+\begin{align}\label{eq:newtons}
+w \leftarrow w - [HL(w)]^{-1}\nabla L(w)
+\end{align}
+
+The issue with this method is in the computation of the Hessian and its inverse.  Most modestly complex neural networks have at least thousands of parameters meaning that $H$ will be a very large matrix (containing the number of parameters squared).  Not only does this put a strain on memory resources, but the inversion of such a matrix is extremely time consuming.  In addition, the loss is defined over every point in the data set meaning even computing the loss is very time consuming for large datasets, let alone its derivative with respect to all parameters.  SGD mitigates these issues by avoiding the computation of both the loss or the Hessian.
+
+\subsection{Stochastic Gradient Descent}\label{sec:sgd}
+Stochastic gradient descent (SGD) is a very simple algorithm which pushes the parameters of a model in the direction associated with the steepest loss decrease.  First we must assume that the loss function $L(g,x,y)$ discussed in chapter \ref{chap:machine_learning} can be broken down as a sum of loss functions over each feature-label pair, that is:
+\begin{align}
+L(g,x,y) = \sum_{i=1}^N l(g,x_i,y_i)
+\end{align}
+Given an initial set of weights (often initialized pseudo-randomly), SGD follows the update in equation \ref{eq:sgd}.
+\begin{align}\label{eq:sgd}
+w \leftarrow w - \eta\nabla l(g,x_i,y_i)
+\end{align}
+where $\eta$ is a real valued hyperparameter called the learning rate.
+
+Equation \ref{eq:sgd} says that SGD alters the weights in the direction of the negative gradient.  Because the the gradient of a funciton normally points in the direction of maximum increase, this update points in the direction of maximum decrease.  This type of learning strategy is called \textit{hill climbing}.  Note that the updates applied to the weights are entirely based on a local calculation, the gradient.  The algorithm is stochastic in the sense that the updates depend only on the \textit{randomly chosen} $x_i,y_i$ pair.  Using the function $l$ instead of $L$ is akin to stochastically approximating the true gradient of $L$ with one of its components.  
+
+Supposing the algorithm halts since all gradients of $l(g,x_i,y_i)$ are zero, this would imply that the gradient of $L$ is given by
+\begin{align}
+\nabla L(g,x,y) = \nabla \sum l(g,x_i,y_i) = \sum \nabla l(g,x_i,y_i) = 0
+\end{align}
+ which is a necessary, but not sufficient condition for having a global minimum at that point.  In practice this never occurs and the algorithm is said to converge if the changes become ``small enough.''  It is obvious that for complicated functions like neural networks, this method in general does not produce optimum results.  That is, the coefficients to which this algorithms converges do not minimize the loss function, $L$.  However as we mentioned with regard to overfitting, you usually do not want to completely minimize the loss function, so this is acceptable.  One may force convergence of the algorithm by applying an exponential decay to the learning rate.  This method is known as exponential learning decay.  Note that this may not actually force convergence in scenarios where the gradient grows exponentially or faster.  
+
+We can think of SGD as approximating Newton's method in two senses.  At each step, value $[HL(w)]^{-1}$ is approximated by $\eta I$ and $L(g,x,y)$ is approximated as $l(g,x_i,y_i)$.  One obvious issue with using SGD is that one must choose the learning rate with little or no guidance from the data.  Usually good values between $10^{-3}$ and $1$ work fairly well as initial learning rates.  This arbitrary factor has caused others to develop more sophisticated techniques which essentially estimates the best learning rate at a given point in time during training.
+
+\subsection{Adam Optimizer}
+The Adam Optimizer algorithm \cite{pd14} essentially calculates how ``reliable'' each element of the gradient vector is and weights the updates accordingly.  It accomplishes this by estimating the first and second moments of the gradient vector with a moving average exponential filter, essentially estimating the mean and variance of each element.  The update weights are inversely proportional to the square root of the second moment, as described in algorithm \ref{alg:adam}.
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\begin{spacing}{1.0}
+    \caption{\textit{Adam Optimizer}.  $(A\circ B)_{ij} = A_{ij}\times B_{ij}$ is the hadamard product of $A$ and $B$.  $(A \oslash B)_{ij} = A_{ij}/B_{ij}$ is Hadamard division.  The hyperparameter $\alpha$ is similar to the learning rate, $\eta$ in SGD.  $\beta_1$ and $\beta_2$ are filter coefficients representing smoothing amount.  The value $\epsilon$ is an arbitrary small number to avoid division by $0$.}
+    \Require $\beta_1,\beta_2$
+    \Require $\alpha$
+    \Require $w$
+    \Require $l(w,x,y)$
+    \State{$m \gets \vec{0}$}
+    \State{$v \gets \vec{0}$}
+    \State{$t \gets 0$}
+    \While{$w$ not converged}
+        \State{$t\gets t + 1$}
+        \State{$G \gets \nabla l(w,x_{t\bmod N},y_{t\bmod N})$}
+        \State{$m \gets \beta_1 m + (1-\beta_1)G$}
+        \State{$v \gets \beta_2 v + (1-\beta_2)(G\circ G)$}
+        \State{$\hat{m} \gets m/(1-\beta_1^t)$}
+        \State{$\hat{v} \gets m/(1-\beta_2^t)$}
+        \State{$w\gets w - \alpha \times \hat{m}\oslash (\sqrt{\hat{v}+\epsilon})$}
+    \EndWhile
+\label{alg:adam}
+\end{spacing}
+\end{algorithmic}
+\end{algorithm}
+
+Adam requires several more hyperparameters as compared to SGD, but the results tend to be less dependent on them.  The parameters $\beta_1$ and $\beta_2$ represent filter coefficients for estimating the first and second moments of the gradient.  Figure \ref{fig:freqz} shows the frequency response with beta ranging from 0.8 to 1.0 logarithmically.  We see that lower $\beta$ represents a bias for lower frequencies.  It turns out that these estimates of $m$ and $v$ are biased, but can be fixed with a simple multiplicative correction (lines 9 and 10).  If you consider the second moment to represent the noise power present in the signal, then the quantity $\hat{m}\oslash \hat{v}$ somewhat represent the signal to noise ratio.  Using this interpretation, this update weighting is somewhat similar to a Wiener filter where the components of the signal which have the most noise are proportionally supressed.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{freqz.png}
+    \caption{Frequency response for several moving average exponential filters.  Lower lines are associated with lower values of $\beta$.}
+    \label{fig:freqz}
+\end{figure}
+
+\subsection{Automatic Differentiation}\label{sec:autodiff}
+In all of the previous training algorithms, we have ignored the computation of the gradient of the loss, $\nabla l(w,x,y)$.  Here we breifly discuss automatic differentiation, a powerful dynamic programming algorithm for computing the gradient of an arbitrary differentiable function.
+
+Consider some function which depends on multiple variables.  In computing the function, it will likely be expressed as the compositions of other functions.  An example taken from \cite{} is shown in equation \ref{eq:autodiff}.
+\begin{align}\label{eq:autodiff}
+f(x_1,x_2) = \log(x_1) + x_1\times x_2 - \sin(x_2)
+\end{align}
+Equation \ref{eq:autodiff} is a composition of $\log$, $\times$, $\sin$, $+$, and $-$.  This composition can be captured in the form of a graph, as seen in figure \ref{fig:graph}.  Starting at the output and working backwards, we can compute the output of the previous required computation.  Automatic differentiation works in much the same way that a normal computation is performed except by applying the chain rule.  For example, in order to compute the derivative with respect to $x_1$ at node $v_7$, representing the function $[\log(x_1) + x_1\times x_2] - [\sin(x_1)]$, we compute $D_{x_1}[\log(x_1) + x_1\times x_2] - D_{x_1}[\sin(x_1)]$.  In order to find the two component values, we look at the nodes associated with those functions where the derivative will either already be computed, or where we will compute the derivative by climbing up the graph the same as in the previous step.  Applying this algorithm for all inputs yields the gradient.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{graph.png}
+    \caption{Graph reproduced from \cite{ab15}.  Each node represents a function of the incoming nodes.}
+    \label{fig:graph}
+\end{figure}
+
+\section{Recurrent Neural Networks}\label{sec:rnn}
+\input{rnn}

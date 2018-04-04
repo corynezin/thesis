@@ -1,0 +1,63 @@
+We used gradient descent to train a word2vec model with noise contrastive estimation.  The hyperparameters we chose are shown in table \ref{tab:embedding_hperparameters}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ l | r }
+    \hline
+    Learning rate & 1.0 \\
+    Batch size & 128 \\
+    Number of Batches & 100,000 \\
+    Embedding size & 128 \\
+    Number of skip windows & 8 \\
+    Size of skip windows & 4 \\
+    Vocabulary size & 10,000 \\
+    \hline
+\end{tabular}
+\caption{Word embedding hyperparameters}
+\label{tab:embedding_hperparameters}
+\end{table}
+
+Our corpus was the concatenation of all preprocessed training samples from the training set in the ``Large Movie Review Datasets.'' \cite{am11}  Preprocessing consisted of the steps laid out in table \ref{tab:preproc}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ l | l }
+    \hline
+    Start & The movie isn't \verb|{<br \><br />}|good, I give it a 1\\
+    Convert to lower case & the movie isn't \verb|{<br \><br />}|good, i give it a 1\\
+    Remove HTML & the movie isn't \space good, i give it a 1\\
+    Expand contractions & the movie is not \space good, i give it a 1\\
+    Remove punctuation & the movie is not \space good i give it a 1\\
+    Expand numbers & the movie is not \space good i give it a one\\
+    Remove extra whitespace & the movie is not good i give it a one\\
+    \hline
+\end{tabular}
+\caption{Preprocessing algorithm}
+\label{tab:preproc}
+\end{table}
+
+The processing resulted in a corpus of 5,887,178 words totaling 31,985,233 characters.  Since there are 25,000 training samples, each review is on average about 234 words, and 1279 characters.  Of all 25,000 reviews training reviews, 27 had more than 1024 words.  The word embedding converged to an average noise contrastive loss of about 5.07.   Semantic difference between two words is measured by the angular distance between their embeddings, that is,
+
+$$ \frac{cos^{-1}\left(\frac{v^Tu}{||v||_2||u||_2}\right)}{\pi}$$
+
+\noindent
+The eight nearest neighbors for a few common words are shown in table \ref{tab:nearest_words}.  We can see that the first few nearest neighbors are fairly high quality, and would usually make grammatical sense for replacement in a sentence.  The quality of replacement falls off quickly after that however.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ | c |  c  c  c  c  c  c  c  c | }
+    \hline
+    all & but& some& and& UNK& just& also& that& so \\ \hline
+    and & UNK& with& but& also& which& simpler& nerd& just \\ \hline
+    will & can& would& if& do& could& to& did& you \\ \hline
+    of & in& from& with& for& UNK& about& which& that \\ \hline
+    her & his& she& him& he& their& UNK& the& india \\ \hline
+    she & he& her& him& his& who& UNK& it& that \\ \hline
+    most & all& best& films& which& other& UNK& some& only \\ \hline
+    one & three& two& zero& five& only& nine& s& UNK \\ \hline
+    movie & film& show& story& it& but& really& that& just \\ \hline 
+    film & movie& story& show& which& UNK& it& that& but \\ \hline
+\end{tabular}
+\caption{Some examples of nearest neighbors in embedding space}
+\label{tab:nearest_words}
+\end{table}

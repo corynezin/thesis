@@ -106,8 +106,4 @@ Y(g) &\geq \mu g_t - \sigma g_n\sqrt{2\log{V}} \\
     \label{fig:saliency}
 \end{figure}
 
-In our word embedding, the average value of $\mu$ was $-0.017$, but there was significant variation across embedding dimension.  The average standard deviation was fairly constant over embedding dimension, with a value of $0.55$.  Since our vocabulary size is 10,000 we have the empircal formula for the upper bound on expected maximum approximate delta when replacing word vector $u$:
-\begin{align}
-\E{\max \hat{D}_{i,*}} &\leq \mu g_t(u) + \sigma g_n(u)\sqrt{2\log(V)} -u^Tg(u) \\
-&= -0.017g_t(u) + 2.36g_n(u) - u^Tg(u)
-\end{align}
+In our word embedding, the average value of $\mu$ was $-0.017$, but there was significant variation across embedding dimension.  The average standard deviation was fairly constant over embedding dimension, with a value of $0.55$.  The exact value of the result is not important however.  What this tells us is that words associated with larger gradient norms have a proportionally larger chance of producing an outlier, at least according to the linear approximation.

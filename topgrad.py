@@ -23,6 +23,7 @@ num_arr = np.zeros((11,))
 I = []; J = []
 c_dist = []
 n_dist = []
+name_list = []
 for file_name in file_list:
     rv = rp.review('./aclImdb/test/posneg/'+file_name[:-4]+'.txt')
     rating = int(re.sub('_|\.npy',' ',file_name).split()[1])
@@ -49,11 +50,12 @@ for file_name in file_list:
         n += 1
         m = m + 1 if rating > 5 else m
         p = p + 1 if rating < 5 else p
-        norms = np.linalg.norm(grad,axis=1)
+        #norms = np.linalg.norm(grad,axis=1)
+        norms = np.abs(np.sum(grad,axis=1))
         centroid = norms.dot(np.arange(0,len(norms))) / np.sum(norms) / len(norms)
         centroid = np.argmax(norms) / len(norms)
         c_dist.append(centroid)
-        print(centroid)
+        #print(centroid)
         sorted_indices = np.argsort(norms)
         top_indices = sorted_indices[-10:]
         for iind,index in enumerate(j):
@@ -61,7 +63,7 @@ for file_name in file_list:
         I.extend(list(i))
         J.extend(list(j))
         for ni,index in enumerate(set(i)):
-            print(index_to_word[index],end=', ')
+            #print(index_to_word[index],end=', ')
             if ni > 5:
                 break
         print('')
@@ -69,14 +71,18 @@ for file_name in file_list:
         final_probs.append(prob_positive)
         delta.append(d)
     else:
-        norms = np.linalg.norm(grad,axis=1)
-        centroid = norms.dot(np.arange(0,len(norms))) / np.sum(norms) / len(norms)
+        #norms = np.linalg.norm(grad,axis=1)
+        norms = np.abs(np.sum(grad,axis=1))
+        #centroid = norms.dot(np.arange(0,len(norms))) / np.sum(norms) / len(norms)
         centroid = np.argmax(norms) / len(norms)
         n_dist.append(centroid)
+        print(file_name)
+        name_list.append(file_name)
     P = P + 1 if rating < 5 else P
     M = M + 1 if rating > 5 else M
     N += 1
 
+np.save('name_list.npy',np.array(name_list))
 print('%d/%d = %f'%(n,N,n/N))
 print('%d/%d = %f'%(m,M,m/M))
 print('%d/%d = %f'%(p,P,p/P))
@@ -84,6 +90,7 @@ plt.hist(np.array(c_dist),bins=np.linspace(0,1,21),label='Successful 1-word atta
 plt.hist(np.array(n_dist),bins=np.linspace(0,1,21),label='Unsuccessful attack')
 plt.xlabel('Fraction of words before sample')
 plt.ylabel('Frequency')
+plt.title('Location of maximum absolute total gradient in text sample')
 plt.show()
 plt.hist(np.array(I),bins=500); plt.show()
 plt.hist(np.array(J),bins=500); plt.show()

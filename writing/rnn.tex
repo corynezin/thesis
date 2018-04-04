@@ -1,0 +1,88 @@
+Recurrent neural networks are a subset of neural networks which have a key distinction from multilayer perceptrons: they can be applied to data of arbitrary length.  To give more detail we introduce some notation.  Let the set of all n-dimensional vector sequences (finite or otherwise) be given by
+\begin{align}
+S_n = \{s:Z \rightarrow \mathbb{R}^n; \text{ } \forall Z\subseteq\mathbb{Z}^+\}
+\end{align}
+While a multilayer perceptron is a function $f:\mathbb{R}^n\rightarrow \mathbb{R}^m$, a recurrent neural network is a function $R: S_n \rightarrow S_m$.
+
+\subsection{Overview}
+
+Of course, we could extend the multilayer perceptron match this if we window the sequence, compute the output, and then slide the input window.  What truly separates RNNs from MLPs is the fact that an RNN's output depends on its ``state'' at previous time steps.  In particular, if we denote the input sequence as $x = (x_1,x_2,\dots,x_k)$ then the states at time steps $1,\dots,k$ are given by equations \ref{eq:rnn_st_start}-\ref{eq:rnn_st_end}.
+
+\begin{align}\label{eq:rnn_st_start}
+S_1 &= s(x_1,S_0)\\
+S_2 &= s(x_2,s(x_1,S_0))\\
+S_3 &= s(x_3,s(x_2,s(x_1,S_0)))\\ \nonumber
+&\vdots\\
+S_k &= r(x_k,S_{k-1})\label{eq:rnn_st_end}
+\end{align}
+And the ouputs are given by equations \ref{eq:rnn_out_start}-\ref{eq:rnn_out_end}
+\begin{align}\label{eq:rnn_out_start}
+R_1 &= r(x_1,S_1)\\
+R_2 &= r(x_2,r(x_1,S_1))\\
+R_3 &= r(x_3,r(x_2,r(x_1,S_1)))\\ \nonumber
+&\vdots\\
+R_k &= r(x_k,S_{k})\label{eq:rnn_out_end}
+\end{align}
+If the output sequence is finite, the output of the RNN is the sequence $R(x) = (R_1,R_2,\dots,R_k)$, else it is given by $R(x) = (R_1,R_2,R_3,\dots)$.  The function $s:\R^n \times \R^p \rightarrow \R^p$ is called the state transition function, and the function $r:\R^n \times \R^p \rightarrow \R^p$ is called the output function.  It is assumed that $S_0$ is some arbitrary fixed value (usually zero), called the initial state.  Note that this framework is all very similar to the state-space model, ubiquitous in control theory, except that nonlinearity is allowed.
+
+We can see that the adapted version of the MLP would not be able to represent functions which depend on inputs from time steps farther apart than the length of the window.  In this regard, MLPs are to RNNs as FIR filters are to IIR filters.  Unfortunately because of the nonlinearities introduced in RNNs, there is no simple method of analyzing stability, and so training of RNNs has proved difficult throughout their history.  Recent advancements like the long short-term memory unit and dropout have made the training of large RNNs possible.
+
+\subsection{Early Networks}
+Some of the first known RNNs, now known as ``simple recurrent networks'' are the Elman \cite{je90} and Jordan \cite{mj86} networks.  The Elman update equations are given by equations \ref{eq:elman_s} and \ref{eq:elman_y}.
+\begin{align}
+S_k &= \sigma_S(W_Sx_k+U_SS_{k-1}+b_S\label{eq:elman_s})\\
+R_k &= \sigma_R(W_RS_k+b_R)\label{eq:elman_y}
+\end{align}
+while the Jordan update equations are given by equations \ref{eq:jordan_s} and \ref{eq:jordan_y}.
+\begin{align}
+S_k &= \sigma_S(W_Sx_k+U_R R_{k-1}+b_S) \label{eq:newj_s} \\
+R_k &= \sigma_R(W_R S_k + b_R) \label{eq:newj_y}
+\end{align}
+The Elman equations are already in a form consistent with our framework.  Substituting the second Jordan equation into the first yields equations \ref{eq:newj_s}-\ref{eq:newj_y}
+\begin{align}
+S_k &= \sigma_S(W_Sx_k+U_R \sigma_R(W_R S_{k-1} + b_R)+b_S)\label{eq:jordan_s}\\
+R_k &= \sigma_R(W_R S_k + b_R) \label{eq:jordan_y}
+\end{align}
+The functions $\sigma_S$ and $\sigma_R$ are sigmoidal activation functions.  The parameters $W_S$,$W_R$, and $U_R$ are matrices, $b_S$ and $b_R$ are bias vectors.
+
+A result analagous to the universal approximation theorem was proved in \cite{hs91}.  Given mild conditions on $r$ and $s$, similar to those of the universal approximation theorem, a recurrent neural net of sufficiently large size is capable of simulating a universal Turing machine.  This means that even a simple RNN (like a Jordan or Elman network) could compute any function, or perform any algorithm that can be performed by a regular computer.  Of course just as with the universal approximation theorem, this says nothing about what is required to train such a network, or how many resources it would require.
+
+\subsection{Long Short-Term Memory}
+Consider computing the derivative of the output of a recurrent neural network with respect to one of its feedback weights, $w$.  By the chain rule we have equation \ref{eq:rnn_deriv}
+\begin{align}\label{eq:rnn_deriv}
+\frac{d}{dw}R_k(w,x_k,S_k) &= r'(w,x_k,S_k)\times s'(w,x_{k-1},S_{k-1})\times \nonumber
+\\&s_{k-1}'(w,x_{k-2},S_{k-2})\times \dots
+\times s'(w,x_2,S_1)\times s'(w,x_1,S_0)\\
+&= R_k'(x_k,S_k)\prod_{i=1}^k s'(x_i,S_{i-1})
+\end{align}
+The log derivative is given by
+\begin{align}
+log(R_k'(x_k,S_k)) + \sum_{i=1}^k \log(s'(x_i,S_{i-1}))
+\end{align}
+Although it is hard to formally say anything about this value, intuitively we see since we are accumulating values over time, the log derivative acts as an unstable system.  If the value goes to some very negative number, then the derivative will become extremely small.  On the other hand if the value goes to some very large number, the derivative will become extremely large.  These issues are known as the problems of vanishing and exploding gradients respectively.
+
+The driving cause for exploding or vanishing gradient is that when the state transitions from one time step to another, it is multiplied by some matrix followed by a nonlinearity.  The chain rule causes this matrix to be multiplied by itself repeatedly in the derivative which results in either exponential blow up or decay.  The only way to maintain a relatively constant value is for that matrix to be identity, that is exactly the diea behind the long short-term memory (LSTM) unit. \cite{sh97} The update equations for the original LSTM RNN are given in equations \ref{eq:lstm_start}-\ref{eq:lstm_end}
+\begin{align}\label{eq:lstm_start}
+i_k &= \sigma_i(W_ix_k + U_iR_{k-1} + b_i)\\
+o_k &= \sigma_o(W_ox_k + U_oR_{k-1} + b_o)\\
+c_k &= \sigma_c(W_cx_k + U_cR_{k-1} + b_c)\\
+S_k &= S_{k-1} + i_k \circ c_k\\
+R_k &= \sigma_R(S_k) \circ o_k\label{eq:lstm_end}
+\end{align}
+Where $\circ$ represents Hadamard (entrywise) multiplication.
+
+It is easy to see that these equations satisfy the update equations of a standard RNN, as we defined.  The direct ``connection'' between $S_k$ and $S_{k-1}$ helps mitigate the issue of vanishing or exploding gradient.  It is important that $i_k$ and $c_k$ can have different signs so that the state is not stuck accumulating in one direction.  For this reason, $\sigma_i$ is usually $\tanh$ and $\sigma_o$ is usually the logistic function.
+
+The model was later extended by \cite{fg00} with what they called a forget gate.  The forget gate, described by the new update equations \ref{eq:forget_1}-\ref{eq:forget_2}, allows the network to essentially discard information in the state and start again.
+\begin{align}
+f_k &= \sigma_f(W_fx_k + U_fR_{k-1} + b_f)\label{eq:forget_1}\\
+S_k &= S_{k-1}\circ f_k + i_k \circ c_k\label{eq:forget_2}
+\end{align}
+
+The same group responsible for the invention of forget gates also invented the peephole LSTM. \cite{fg00_2} In this modification of the forget gated LSTM, all instances where the output of the neural network is fed back are replaced with the internal state instead.  For example equation \ref{eq:lstm_start} becomes equation \ref{eq:peephole} and so on.
+\begin{align}\label{eq:peephole}
+i_k = \sigma_i(W_ix_k + U_iS_{k-1})
+\end{align}
+
+\subsection{Training RNN's}\label{sec:rnn_training}
+Recurrent neural networks are trained in much the same way that a standard neural network is trained with one key complication, the input is potentially unbounded.  This means that the number of computations is potentially unbounded and so there is no single graph representing the network.  To solve this issue in computing gradients, the nueral network is ``unwrapped'' for some finite amount of time steps.  Any input which goes past the maximum time step is discarded in the computation.

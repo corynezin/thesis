@@ -10,10 +10,14 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{titling}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
 \graphicspath{ {./images/} }
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper,left=1.5in,right=1in,top=1in,bottom=1in]{geometry}
 \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\R}{\mathbb{R}}
 \DeclareDocumentCommand{\E}{s m}{
   \operatorname{E}%
   \IfBooleanTF{#1}% Condition on *
@@ -26,12 +30,12 @@
 \begin{document}
 \bibliographystyle{IEEEtran}
 \doublespacing
-%\include{abstract}
-%\tableofcontents
+\include{abstract}
+\tableofcontents
 \include{background}
-%\include{problem}
-%\include{solution}
-%\include{results}
-%\include{conclusion}
-%\bibliography{references}{}
+\include{problem}
+\include{solution}
+\include{results}
+\include{conclusion}
+\bibliography{references}{}
 \end{document}

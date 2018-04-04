@@ -1,1 +1,99 @@
 \chapter{Algorithm Description}
+While gradients tends to be overall useful indiciators for small perturbations, it is not entirely useful or accurate in predicting large differences.  This makes sense given that gradient is only a local measure of change, however since we are attempting to find such large differences, we should not rely on the gradient alone.  We discuss three solutions each of which builds on the last.  Since we found that in most cases a classification change could be achieved by replacing only one word, we focus on this objective.  If it turns out that more replacements are required, we can extend any of our approaches with an exponential search.
+
+In the case of replacing a single word, the entire search space for a given sample can be described as the cartesian product of the set of vocabulary words and the set of all sample words.  In other words, if we let $V$ ($|V| = N$) denote the set of vocabulary words and $S$ ($|S| = M$) denote the set of sample words (along with their location in the sample), our search space is given by $V\times S$ with the size of the set being $|V\times S| = NM$.  It is convenient to consider sequence equivalents of $V$ and $S$: $v = (v_i)_{i=1}^N$ and $s = (s_i)_{i=1}^M$.  Let a classification function for a sample be given by $r(s)$, and let the sequence $s^{i,j}$ be given by equation \ref{eq:replacement_sequence}
+\begin{align}\label{eq:replacement_sequence}
+s^{i,j} = (s_1,s_2,\dots,s_{i-1},v_j,s_{i+1},\dots,s_M)
+\end{align}
+
+\section{Full Search}
+For the objective of finding a single adversarial replacement, we begin with the brute force solution of a full search.  We generate the matrix in equation \ref{eq:class_matrix} and search for the symbol which corresponds to an adversarial example.
+\begin{align}\label{eq:class_matrix}
+M_{M,N}(\{0,1\}) \ni A_{i,j} = r(s^{i,j})
+\end{align}
+This method of course has the advantage of providing the upper bound for performance in generating adversarial derivations with one-word replacements.  It has the disadvantage of being very time intensive.  Assuming the classifier's time complexity is linear in the length of the sample, this algorithm's time complexity is $T=\mathcal{O}(NM^2)$ and its space complexity is $D=\mathcal{O}(W)$, where $W$ is the number of weights stored in the model.
+
+Of course with parallel operations, we can offload some time complexity to memory complexity and obtain any of the time complexities in table \ref{tab:fs_complexity}
+\begin{table}
+\centering
+\begin{tabular}{ |c|l|l| } 
+ \hline
+ Parallelization Tier & Time & Space \\ \hline
+ 0&$\mathcal{O}(NM^2)$ & $\mathcal{O}(W)$ \\ %\hline
+ 1&$\mathcal{O}(NM)$ & $\mathcal{O}(WM)$ \\ %\hline
+ 2&$\mathcal{O}(M^2)$ & $\mathcal{O}(WN)$ \\ %\hline
+ 3&$\mathcal{O}(M)$ & $\mathcal{O}(WNM)$ \\ \hline
+\end{tabular}
+\caption{Time and space complexities for full search with varying levels of parallelization.}
+\label{tab:fs_complexity}
+\end{table}
+Note that since the operation of a single recurrent neural network is not parallelizable, the time complexity will always have a factor of at least $M$ no matter how much memory/computing power is available.  With regard to the adversarial matrix $A$, the four complexities above correspond to computing one entry at a time, one row at a time, one column at a time, and computing the entire matrix in parallel, respectively.  
+
+\section{Window Search}
+As we discuss in section \ref{sec:results}, a full search will not tend to work well for long samples.  Depending on how the computation is organized, the algorithm will either run out of memory or take far too long to find a solution (or determine that there isn't one).  Looking at the time complexities above, this is intuitive given that there is a quadratic dependence on $M$, the length of the sample.  As mentioned in section \ref{sec:word_embeddings}, the average length of a review is about 234 words, meaning that typically $M^2 > N$ and sometimes $M^2 \gg N$.  There are two ways we considered dealing with this quadratic growth.
+
+The simplest solution is to cap $M$ at some fixed value, $C$. and discard the rest of the sample, we call this cap search.  As discussed in section \ref{}, this is in fact an efficient method used to train recurrent neural networks.  Since $V$ and $W$ are also fixed for a given model, this has the advantage of fixing the memory usage in any of the above scenarios.  This is desireable since available memory is a static resource which does not change from iteration to iteration, while time is more flexible.  On the other hand, this method has the obvious drawback that it may either yield an example which is not truly adversarial, or it may fail to find an adversarial example where there is one.  The time and space complexities are given in table \ref{tab:wa_complexity}.  This search generates a matrix $A^{cs}$, which we hope is approximately the same as the top $C$ rows of $A$.
+\begin{table}
+\centering
+\begin{tabular}{ |c|l|l| } 
+ \hline
+ Parallelization Tier & Time & Space \\ \hline
+ 0&$\mathcal{O}(NC^2)$ & $\mathcal{O}(W)$ \\ %\hline
+ 1&$\mathcal{O}(NC)$ & $\mathcal{O}(WC)$ \\ %\hline
+ 2&$\mathcal{O}(C^2)$ & $\mathcal{O}(WN)$ \\% \hline
+ 3&$\mathcal{O}(C)$ & $\mathcal{O}(WNC)$ \\ \hline
+\end{tabular}
+\caption{Time and space complexities for full search with sample length capped at $C$.}
+\label{tab:wa_complexity}
+\end{table}
+
+Consider that it may be valuable to consider all words in a review for replacement, especially very negative or positive ones.  In this case, we would still like to find those words and therefore would like to consider every word in the sample as a candidate for replacement.  Instead of simply taking the first $C$ words of a sample, we take $C$ words surrounding our candidate word like a sliding window, and infer for every word in the sample.  The new complexities associated with this algorithm are in table \ref{tab:waw_complexity}.  Since $C$ is strictly less than $M$, this is algorithm is slower and more memory intensive, and still not guaranteed to produce a correct result.  This search generates a matrix $A^{ws}$ which should approximate $A$.
+\begin{table}
+\centering
+\begin{tabular}{ |c|l|l| } 
+ \hline
+ Parallelization Tier & Time & Space \\ \hline
+ 0&$\mathcal{O}(NMC)$ & $\mathcal{O}(W)$ \\
+ 1&$\mathcal{O}(NC)$ & $\mathcal{O}(WM)$ \\
+ 2&$\mathcal{O}(CM)$ & $\mathcal{O}(WN)$ \\
+ 3&$\mathcal{O}(C)$ & $\mathcal{O}(WNM)$ \\ \hline
+\end{tabular}
+\caption{Time and space complexities for window search with a window of size $C$.}
+\label{tab:waw_complexity}
+\end{table}
+\section{Gradient Assisted Window Search}
+Finally, we may reduce complexity even further by using the results of section \ref{sec:stochastic_gradient_analysis}.  Because we found that words associated with large gradients tend to be good words for replacement, we can reduce the effective value of $M$ in the window search algorithm.  Suppose we only consider the top $K$ words for replacement, as ordered by the gradient and perform a search over those value, we call this method gradient assisted window search, or GAWS.  The complexities are given simply by replacing $M$ by $K$ in the window search algorithm, and can be found in table \ref{fig:gaws_complexity}.  This search generates a matrix $A^{gs}$ which should approximate $K$ rows of $A$ corresponding to large gradients.
+\begin{table}
+\centering
+\begin{tabular}{ |c|l|l| } 
+ \hline
+ Parallelization Tier & Time & Space \\ \hline
+ 0&$\mathcal{O}(NKC)$ & $\mathcal{O}(W)$ \\
+ 1&$\mathcal{O}(NC)$ & $\mathcal{O}(WK)$ \\
+ 2&$\mathcal{O}(CK)$ & $\mathcal{O}(WN)$ \\
+ 3&$\mathcal{O}(C)$ & $\mathcal{O}(WNK)$ \\ \hline
+\end{tabular}
+\caption{Time and space complexities for gradient assisted window search with a window of size $C$ and taking the top $K$ words.}
+\label{tab:gaws_complexity}
+\end{table}
+\section{Multi-word Replacement}
+Up to this point, we have only considered searching for a one-word replacement adversarial derivation.  While this is sufficient for about $70\%$ of samples, there is still a need to produce derivations in the remaining $30\%$.  If a given algorithm failed, it either didn't detect any adversarial derivations, or all of the adversarial derivations it detected were not true derivations.  Both of these issues can be remedied with two extensions.  
+
+First, instead of dealing with the matrix $A$, we can deal with a more general matrix of classifier confidence levels rather than just decisions.  Suppose that the function $p(s)$ gives the ``probability'' that a sample $s$ is class $1$.  Then in the same way we generate the matrix $A$ and all of its approximations, we can also generate the matrix $P_{i,j} = p(s^{i,j})$.  Thresholding this matrix would yield $A$ or its approximation.  Second, if no derivations are detected, we can pick the entry of $P$ with the highest or lowest value (depending on what classification we are trying to cause) and attempt using that substitution.  From this point onward, we assume the second tier of parallelization because we found that tier 3 was not feasible on our hardware.
+
+If replacing one word is not successful, we can select more words.  Doing this naively would lead to exponential blow up.  Trying every combination of $L$ words in the full search would cost roughly $\prod_{i=0}^{L-1} (M-i)N = \frac{M!}{(M-L)!}N^L$ lookups, each lookup costing $O(M)$ time.  Since the time complexity is already a restricting factor, this is not feasible even for small $L$.  We therefore implemented a fast greedy approach where the maximum is taken across all columns of $P$ (this takes $O(N)$ time and only $O(M)$ space since the min/max is taken as soon as all elements are available)) and the top $L$ entries of the result are chosen as candidate replacements.  Sorting all values in the result requires $O(M\log(M))$ time.
+
+Now, we still need some method of determining the smallest value of $L$ which allows us to achieve a misclassification.  We make the assumption that replacing more words than required will still lead to a misclassification, and therefore the class vs. $L$ curve looks like a step function.  Since it is monotonic, we can use an exponential search for the transistion point which runs in $O(M\log L)$ time and $O(W+M)$ space given that all candidates have already been determined.  This will usually be better than a binary search given that the number of words being replaced, $L$ is often small compared to the size of the sample, $M$.  Adding all steps together, the final time and space complexities of the given algorithms can be found in table \ref{tab:overall_complexity}
+\begin{table}
+\centering
+\begin{tabular}{ |c|c|c| } 
+ \hline
+ Method & Time & Space \\ \hline
+ Full Search & $O(M^2 + M\log(M) + M\log L)$ & $O(WN)$ \\ \hline 
+ Cap Search & $O(C^2 + M\log(M) + M\log L)$ & $O(WN)$ \\ \hline 
+ Window Search & $O(CM + M\log(M) + M\log L)$ & $O(WN)$ \\ \hline 
+ GAWS & $O(CK + K\log(K) + M\log L)$ & $O(WN)$ \\ \hline 
+\end{tabular}
+\caption{Overall time complexities for several search algorithms extended with an exponential search for multi-word replacement.  These complexities assume the second tier of parallelization found in tables \ref{tab:fs_complexity} through \ref{tab:gaws_complexity}.}
+\label{tab:overall_complexity}
+\end{table}

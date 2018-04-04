@@ -1,26 +1,41 @@
 \contentsline {chapter}{\numberline {1}Background}{3}
 \contentsline {section}{\numberline {1.1}Machine Learning}{3}
 \contentsline {subsection}{\numberline {1.1.1}Hyperparameters}{5}
-\contentsline {subsection}{\numberline {1.1.2}Overfitting}{5}
-\contentsline {section}{\numberline {1.2}Neural Networks}{6}
-\contentsline {subsection}{\numberline {1.2.1}Multilayer Perceptron}{7}
-\contentsline {subsection}{\numberline {1.2.2}Universal Approximation Theorem}{8}
-\contentsline {section}{\numberline {1.3}Training Algorithms}{9}
-\contentsline {section}{\numberline {1.4}Recurrent Neural Networks}{9}
-\contentsline {section}{\numberline {1.5}Numerical Representation of Language}{9}
-\contentsline {subsection}{\numberline {1.5.1}Bag-of-words}{10}
-\contentsline {subsection}{\numberline {1.5.2}Latent Semantic Analysis}{12}
-\contentsline {subsection}{\numberline {1.5.3}Word2vec}{13}
-\contentsline {chapter}{\numberline {2}Problem Statement}{18}
-\contentsline {section}{\numberline {2.1}Adversarial Examples}{18}
-\contentsline {section}{\numberline {2.2}Word Embeddings}{20}
-\contentsline {section}{\numberline {2.3}Adversarial Text Derivation}{22}
-\contentsline {section}{\numberline {2.4}Stochastic Gradient Analysis}{24}
-\contentsline {chapter}{\numberline {3}Algorithm Description}{30}
-\contentsline {chapter}{\numberline {4}Results}{31}
-\contentsline {section}{\numberline {4.1}White Box}{32}
-\contentsline {section}{\numberline {4.2}Gray Box}{32}
-\contentsline {section}{\numberline {4.3}Black Box}{32}
-\contentsline {chapter}{\numberline {5}Conclusion}{33}
-\contentsline {section}{\numberline {5.1}Discussion}{33}
-\contentsline {section}{\numberline {5.2}Future Work}{33}
+\contentsline {subsection}{\numberline {1.1.2}Overfitting}{7}
+\contentsline {subsection}{\numberline {1.1.3}Training, Validation, and Testing}{8}
+\contentsline {section}{\numberline {1.2}Neural Networks}{9}
+\contentsline {subsection}{\numberline {1.2.1}Multilayer Perceptron}{9}
+\contentsline {subsection}{\numberline {1.2.2}Universal Approximation Theorem}{10}
+\contentsline {section}{\numberline {1.3}Training Algorithms}{11}
+\contentsline {subsection}{\numberline {1.3.1}Newton's Method}{11}
+\contentsline {subsection}{\numberline {1.3.2}Stochastic Gradient Descent}{12}
+\contentsline {subsection}{\numberline {1.3.3}Adam Optimizer}{14}
+\contentsline {subsection}{\numberline {1.3.4}Automatic Differentiation}{15}
+\contentsline {section}{\numberline {1.4}Recurrent Neural Networks}{16}
+\contentsline {subsection}{\numberline {1.4.1}Overview}{17}
+\contentsline {subsection}{\numberline {1.4.2}Early Networks}{19}
+\contentsline {subsection}{\numberline {1.4.3}Long Short-Term Memory}{20}
+\contentsline {subsection}{\numberline {1.4.4}Training RNN's}{22}
+\contentsline {section}{\numberline {1.5}Numerical Representation of Language}{22}
+\contentsline {subsection}{\numberline {1.5.1}Bag-of-words}{22}
+\contentsline {subsection}{\numberline {1.5.2}Latent Semantic Analysis}{25}
+\contentsline {subsection}{\numberline {1.5.3}Word2vec}{25}
+\contentsline {chapter}{\numberline {2}Problem Statement}{31}
+\contentsline {section}{\numberline {2.1}Adversarial Examples}{31}
+\contentsline {section}{\numberline {2.2}Word Embeddings}{33}
+\contentsline {section}{\numberline {2.3}Adversarial Text Derivation}{34}
+\contentsline {chapter}{\numberline {3}Preliminary Results}{36}
+\contentsline {section}{\numberline {3.1}Word Embedding Training}{36}
+\contentsline {section}{\numberline {3.2}RNN Training}{37}
+\contentsline {section}{\numberline {3.3}Stochastic Gradient Analysis}{38}
+\contentsline {chapter}{\numberline {4}Algorithm Description}{44}
+\contentsline {section}{\numberline {4.1}Full Search}{45}
+\contentsline {section}{\numberline {4.2}Window Search}{46}
+\contentsline {section}{\numberline {4.3}Gradient Assisted Window Search}{47}
+\contentsline {section}{\numberline {4.4}Multi-word Replacement}{48}
+\contentsline {chapter}{\numberline {5}Results}{50}
+\contentsline {section}{\numberline {5.1}White Box}{50}
+\contentsline {section}{\numberline {5.2}Gray Box}{54}
+\contentsline {section}{\numberline {5.3}Black Box}{54}
+\contentsline {chapter}{\numberline {6}Conclusion}{55}
+\contentsline {section}{\numberline {6.1}Future Work}{55}
