@@ -1,4 +1,4 @@
-\documentclass[12pt]{report}
+\documentclass[12pt,oneside]{book}
 \usepackage{setspace}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -13,6 +13,8 @@
 \usepackage{algorithm}
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
+\usepackage{titling}
+\usepackage{url}
 \graphicspath{ {./images/} }
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper,left=1.5in,right=1in,top=1in,bottom=1in]{geometry}
@@ -29,13 +31,25 @@
 \setcounter{MaxMatrixCols}{20}
 \begin{document}
 \bibliographystyle{IEEEtran}
+\pagenumbering{gobble}
+\include{title}
+\include{signature}
+\frontmatter
+\pagenumbering{roman}
+\include{acknowledgements}
 \doublespacing
 \include{abstract}
 \tableofcontents
+\listoffigures
+\listoftables
+\mainmatter
+\include{introduction}
 \include{background}
 \include{problem}
 \include{solution}
 \include{results}
 \include{conclusion}
 \bibliography{references}{}
+\appendix
+\include{appendix}
 \end{document}

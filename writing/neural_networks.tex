@@ -1,18 +1,27 @@
-A neural network is a class of mathematical function which uses non-linearities in order to increase representational power as compared to simple linear models.  They differ from other non-linear models like logistic regression by having multiple ``layers'' of nonlinearity between the input and the output.  These non-linearities are called \textit{activiation functions}.  We now discuss one of the simplest neural networks to highlight and clarify some of these terms, the multilayer perceptron. 
+A neural network is a class of mathematical function which uses non-linearities in order to increase representational power as compared to simple linear models.  They differ from other non-linear models like logistic regression by having multiple ``layers'' of nonlinearity between the input and the output.  These non-linearities are called \textit{activation functions}.  The multilayer perceptron is a simple example of neural network which is covered in the following section.
 
 \subsection{Multilayer Perceptron}
 A multilayer perceptron is a function $f:\mathbb{R}^n\rightarrow \mathbb{R}^m$. Given some vector $x\in \mathbb{R}^n$ of inputs, the output vector $f(x)\in\mathbb{R}^m$ of a multilayer perceptron is given by equation \ref{eq:mlp}
 \begin{align}\label{eq:mlp}
     f(x) = \vec{\sigma_p} \circ T_p \circ\cdots\circ \vec{\sigma_2}\circ T_2\circ \vec{\sigma_1} \circ T_1\circ x
 \end{align}
-The functions $T_1,\dots,T_p$ are assumed to be affine and often represented as matrix multiplications.  The functions $\vec{\sigma_1},\dots,\vec{\sigma_p}$ are assumed to be nonlinear, each of these is an activation function.  In order for equation \ref{eq:mlp} to make sense, we must assume that the dimensions of each function are compatible with one another.  As we will see in section \ref{sec:activation_functions}, activation functions are usually simple functions which operate on an element-by-element basis.  Here we say the neural network described by \ref{eq:mlp} has $p+1$ layers.  Each activation function adds a layer to the \textit{input layer} which consists of $x$ alone.  Note that the final activation function $\vec{\sigma}_p$ is optional.  It will usually be included if the neural network is performing a classification task and exluded if performing a regression task.
+The functions $T_1,\dots,T_p$ are assumed to be affine and often represented as matrix multiplications plus constants.  The functions $\vec{\sigma_1},\dots,\vec{\sigma_p}$ are assumed to be nonlinear, each of these is an activation function.  In order for equation \ref{eq:mlp} to make sense, one must assume that the dimensions of each function are compatible with one another.  Activation functions are usually simple functions which operate on an element-by-element basis.  Here the neural network described by \ref{eq:mlp} has $p+1$ layers.  Each activation function adds a layer to the \textit{input layer} which consists of $x$ alone.  Note that the final activation function $\vec{\sigma}_p$ is optional.  It will usually be included if the neural network is performing a classification task and excluded if performing a regression task.
 
+In reference to the previous section, the loss function, $L$ for a neural network classifier is typically given by cross entropy:
+\begin{align}
+    l(f,x,y) &= \frac{1}{m}\sum_{i=1}^m y_i\log(f_i(x)) + (1-y_i)\log(1-f_i(x))\\
+    L(f,X,Y) &= \frac{1}{N}\sum_{i=1}^N l(f,X_i,Y_i)
+\end{align}
+ and $\vec{\sigma_p}$ is typically given by the softmax function:
+\begin{align}
+    \vec{\sigma}(\vec{x}) = \frac{e^{x_i}}{\sum_{i=1}^N e^{x_i}}
+\end{align}
 \subsection{Universal Approximation Theorem}
 The simplest multilayer perceptron has three layers: the input, hidden, and output layers.  In this case, the network function is simply given by
 \begin{align}
 f(x) = T_2 \circ \vec{\sigma} \circ T_1 \circ x
 \end{align}
-Part of what makes neural networks of the above form so attractive is that they are simple yet powerful.  Given fairly weak constraints on the activation functions, it is possible to represent any univariate continous function on a compact set arbitrarily well with some $T_1,T_2$ with finite dimensional codomains. \cite{gc89} This has been proved for the $L^1$ norm, $L^2$ norm, and the $L^\infty$ norm.  To be specific, if we define a univariate \textit{sigmoidal} function as $\sigma: \mathbb{R}\rightarrow \mathbb{R}$ as any function satisfying
+Part of what makes neural networks of the above form so attractive is that they are simple yet powerful.  Given fairly weak constraints on the activation functions, it is possible to represent any univariate continuous function on a compact set arbitrarily well with some $T_1,T_2$ with finite dimensional codomains. \cite{gc89} This has been proven for the $L^1$ norm, $L^2$ norm, and the $L^\infty$ norm.  To be specific, a univariate \textit{sigmoidal} function is defined as $\sigma: \mathbb{R}\rightarrow \mathbb{R}$ and any function satisfying
 \begin{align}
 \sigma(t) \rightarrow
 \begin{cases}
@@ -20,11 +29,11 @@ Part of what makes neural networks of the above form so attractive is that they 
 0 \text{ as } t\rightarrow -\infty
 \end{cases}
 \end{align}
-We define $\vec{\sigma}$ as the vectorization of $\sigma$.  That is, 
+Define $\vec{\sigma}$ as the vectorization of $\sigma$.  That is, 
 \begin{align}
 \vec{\sigma}(x)_i = \sigma(x_i)
 \end{align}
-(One common choice for such a function in neural networks is the logistic function given by $\sigma(x) = \frac{1}{1-\exp(x)}$.)  The universal approximation theorem says that given a compact set, $I\subset \mathbb{R}^m$, $\epsilon > 0$, and this sigmoidal activation, we can pick $T_1,T_2$ such that any of the conditions in equations \ref{eq:linf}-\ref{eq:l2} could be met.
+Two common choices for such a function in neural networks are the logistic function (given by $\sigma(x) = \frac{1}{1-e^x})$ and the $\tanh$ function (given by $\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$).  The universal approximation theorem says that given a compact set, $I\subset \mathbb{R}^m$, $\epsilon > 0$, and this sigmoidal activation, one can pick $T_1,T_2$ such that any of the conditions in equations \ref{eq:linf}-\ref{eq:l2} could be met.
 \begin{align}
 \label{eq:linf}||f(x) - g(x)||_\infty &< \epsilon \text{ } \forall x\in I \\
 \label{eq:l1}||f(x) - g(x)||_1 &< \epsilon \text{ } \forall x\in I\\
@@ -32,31 +41,32 @@ We define $\vec{\sigma}$ as the vectorization of $\sigma$.  That is,
 \end{align}
 for any function, $g(x)$ in $C(I)$, $L^1(I)$, or $L^2(I)$ respectively.
 
-However, as the author of \cite{gc89} writes, this theorem gives no upper bound on the dimensionality of the output of $T_1$ and posits that this value be be very large.  In addition, we are still left the task of determining the functions $T_1$ and $T_2$ which produce the desired results.  Since they are affine and $x$ is finite dimensional, they may be represented with matrices and so our task is to find the corresponding coefficients, this task is called training.  This is usually done with a very approximate algorithm, stochastic gradient descent, covered in section \ref{sec:sgd}.  
+However, as the author of \cite{gc89} writes, this theorem gives no upper bound on the dimensionality of the output of $T_1$ and posits that this value is likely very large.  In addition, one is still left the task of determining the functions $T_1$ and $T_2$ which produce the desired results.  Since they are affine and $x$ is finite dimensional, they may be represented with matrices and so the task is to find the corresponding coefficients, i.e. training.  This is usually done with a very approximate algorithm, stochastic gradient descent, covered in section \ref{sec:sgd}.  
 
-The two main issues of training is that the algorithms are not exact, and the size of matrices required to represent our function may be too large to be comuptationally feasible. For these reasons, most neural network research is devoted to creating structures which facilitate learning or reduce the computational complexity of a model.  In section \ref{sec:rnn} we describe recurrent neural networks, a structure which is particularly efficient at learning features of time series.  In section \ref{sec:training} we discuss several training strategies which help learn the correct parameters as well as avoid the problem of overfitting.
+The two main issues of training is that the algorithms are not exact, and the size of matrices required to represent the function may be too large to be computationally feasible. For these reasons, most neural network research is devoted to creating structures which facilitate learning or reduce the computational complexity of a model.  Section \ref{sec:training} discusses several training strategies which help learn the correct parameters as well as avoid the problem of overfitting.  Section \ref{sec:rnn} describes recurrent neural networks, a structure which is particularly efficient at learning features of time series.  
 
 \section{Training Algorithms}\label{sec:training}
-Neural networks are highly nonlinear, non-convex functions and therefore very difficult to train efficiently.  We can think of any kind of machine learning training as being in a large field and trying to find the lowest valley or the highest peak.  Unfortunately, we cannot see the terrain around us and only have local information about our current point.  Stochastic gradient descent is the ubiquitous choice for almost every training scenario.  Powerful extensions of stochastic gradient descent have also been invented, such as the Adam optimizer.
+Neural networks are highly nonlinear, non-convex functions and therefore very difficult to train efficiently.  Colloquially, one can think of any kind of machine learning training as being in a large field and trying to find the lowest valley or the highest peak.  Unfortunately, one cannot see the terrain nearby and only have local information about the current point.  Stochastic gradient descent is the ubiquitous choice for almost every training scenario.  Powerful extensions of stochastic gradient descent have also been invented, such as the Adam optimizer.
 
 \subsection{Newton's Method}
-If our weights are allowed to range over an open set (in fact they are usually over $\mathbb{R}$) then $\nabla L = 0$ is a necessary condition for the loss to be minimum.  This condition also guarantees we are at least at a global minimum or maximum.  This equation is usually not directly solvable for nonlinear functions like neural networks.  However, we can use Newton's method to successively approximate it.  In reference to the loss function discussed in chapter \ref{sec:machine_learning}, let $L(g,x,y) = L(w)$ where $w$ is the vector of weights for the neural network.  Applying Taylor's Formula to the gradient, we have:
+If weights are allowed to range over an open set (in fact they are usually over $\mathbb{R}$) then $\nabla L = 0$ is a necessary condition for the loss to be minimum.  This condition also guarantees the function is at least at a global minimum or maximum.  This equation is usually not directly solvable for nonlinear functions like neural networks.  However, Newton's method can be used to successively approximate it.  In reference to the loss function discussed in section \ref{sec:machine_learning}, let $L(g,x,y) = L(w)$ where $w$ is the vector of weights for the neural network.  Applying Taylor's Formula to the gradient:
 \begin{align}
 \nabla L(w+\Delta) &\approx \nabla L(w) + HL(w)\Delta
 \end{align}
-If we want to find the zero of $\nabla L$, we set $L(w+\Delta) = 0$ resulting in equation \ref{eq:newton}
+where $H$ is the Hessian matrix of $L$. 
+To find the zero of $\nabla L$, set $L(w+\Delta) = 0$ resulting in  
 \begin{align}\label{eq:newton}
 \Delta &= -[HL(w)]^{-1}\nabla L(w)
 \end{align}
-where $H$ is the Hessian matrix of $L$.  This yields the update step in equation \ref{eq:newtons}
+Which finally yields the update step
 \begin{align}\label{eq:newtons}
-w \leftarrow w - [HL(w)]^{-1}\nabla L(w)
+w \gets w - [HL(w)]^{-1}\nabla L(w)
 \end{align}
 
-The issue with this method is in the computation of the Hessian and its inverse.  Most modestly complex neural networks have at least thousands of parameters meaning that $H$ will be a very large matrix (containing the number of parameters squared).  Not only does this put a strain on memory resources, but the inversion of such a matrix is extremely time consuming.  In addition, the loss is defined over every point in the data set meaning even computing the loss is very time consuming for large datasets, let alone its derivative with respect to all parameters.  SGD mitigates these issues by avoiding the computation of both the loss or the Hessian.
+The issue with this method is in the computation of the Hessian and its inverse.  Most modestly complex neural networks have at least thousands of parameters meaning that $H$ will be a very large matrix (containing the number of parameters squared).  Not only does this put a strain on memory resources, but the inversion of such a matrix is extremely time consuming.  In addition, the loss is defined over every point in the data set meaning even computing the loss is very time consuming for large data sets, let alone its derivative with respect to all parameters.  SGD mitigates these issues by avoiding the computation of both the loss or the Hessian.
 
 \subsection{Stochastic Gradient Descent}\label{sec:sgd}
-Stochastic gradient descent (SGD) is a very simple algorithm which pushes the parameters of a model in the direction associated with the steepest loss decrease.  First we must assume that the loss function $L(g,x,y)$ discussed in chapter \ref{chap:machine_learning} can be broken down as a sum of loss functions over each feature-label pair, that is:
+Stochastic gradient descent (SGD) is a very simple algorithm which pushes the parameters of a model in the direction associated with the steepest loss decrease.  First, assume that the loss function $L(g,x,y)$ discussed in section \ref{sec:machine_learning} can be broken down as a sum of loss functions over each feature-label pair, that is:
 \begin{align}
 L(g,x,y) = \sum_{i=1}^N l(g,x_i,y_i)
 \end{align}
@@ -66,15 +76,15 @@ w \leftarrow w - \eta\nabla l(g,x_i,y_i)
 \end{align}
 where $\eta$ is a real valued hyperparameter called the learning rate.
 
-Equation \ref{eq:sgd} says that SGD alters the weights in the direction of the negative gradient.  Because the the gradient of a funciton normally points in the direction of maximum increase, this update points in the direction of maximum decrease.  This type of learning strategy is called \textit{hill climbing}.  Note that the updates applied to the weights are entirely based on a local calculation, the gradient.  The algorithm is stochastic in the sense that the updates depend only on the \textit{randomly chosen} $x_i,y_i$ pair.  Using the function $l$ instead of $L$ is akin to stochastically approximating the true gradient of $L$ with one of its components.  
+Equation \ref{eq:sgd} says that SGD alters the weights in the direction of the negative gradient.  Because the the gradient of a function normally points in the direction of maximum increase, this update points in the direction of maximum decrease.  This type of learning strategy is called \textit{hill climbing}.  Note that the updates applied to the weights are entirely based on a local calculation, the gradient.  The algorithm is stochastic in the sense that the updates depend only on the \textit{randomly chosen} $x_i,y_i$ pair.  Using the function $l$ instead of $L$ is akin to stochastically approximating the true gradient of $L$ with one of its components.  
 
 Supposing the algorithm halts since all gradients of $l(g,x_i,y_i)$ are zero, this would imply that the gradient of $L$ is given by
 \begin{align}
 \nabla L(g,x,y) = \nabla \sum l(g,x_i,y_i) = \sum \nabla l(g,x_i,y_i) = 0
 \end{align}
- which is a necessary, but not sufficient condition for having a global minimum at that point.  In practice this never occurs and the algorithm is said to converge if the changes become ``small enough.''  It is obvious that for complicated functions like neural networks, this method in general does not produce optimum results.  That is, the coefficients to which this algorithms converges do not minimize the loss function, $L$.  However as we mentioned with regard to overfitting, you usually do not want to completely minimize the loss function, so this is acceptable.  One may force convergence of the algorithm by applying an exponential decay to the learning rate.  This method is known as exponential learning decay.  Note that this may not actually force convergence in scenarios where the gradient grows exponentially or faster.  
+ which is a necessary, but not sufficient condition for having a global minimum at that point.  In practice this never occurs and the algorithm is said to converge if the changes become ``small enough.''  It is obvious that for complicated functions like neural networks, this method in general does not produce optimum results.  That is, the coefficients to which this algorithms converges do not minimize the loss function, $L$.  However as mentioned with regard to overfitting, completely minimizing the loss function does not necessarily yield good results anyway.  One may force convergence of the algorithm by applying an exponential decay to the learning rate.  This method is known as exponential learning decay.  Note that this may not actually force convergence in scenarios where the gradient grows exponentially or faster.  
 
-We can think of SGD as approximating Newton's method in two senses.  At each step, value $[HL(w)]^{-1}$ is approximated by $\eta I$ and $L(g,x,y)$ is approximated as $l(g,x_i,y_i)$.  One obvious issue with using SGD is that one must choose the learning rate with little or no guidance from the data.  Usually good values between $10^{-3}$ and $1$ work fairly well as initial learning rates.  This arbitrary factor has caused others to develop more sophisticated techniques which essentially estimates the best learning rate at a given point in time during training.
+SGD is an approximation of Newton's method in two senses.  At each step, value $[HL(w)]^{-1}$ is approximated by $\eta I$ and $L(g,x,y)$ is approximated as $l(g,x_i,y_i)$.  One obvious issue with using SGD is that one must choose the learning rate with little or no guidance from the data.  Usually good values between $10^{-3}$ and $1$ work fairly well as initial learning rates.  This arbitrary factor has caused others to develop more sophisticated techniques which essentially estimates the best learning rate at a given point in time during training.
 
 \subsection{Adam Optimizer}
 The Adam Optimizer algorithm \cite{pd14} essentially calculates how ``reliable'' each element of the gradient vector is and weights the updates accordingly.  It accomplishes this by estimating the first and second moments of the gradient vector with a moving average exponential filter, essentially estimating the mean and variance of each element.  The update weights are inversely proportional to the square root of the second moment, as described in algorithm \ref{alg:adam}.
@@ -82,7 +92,7 @@ The Adam Optimizer algorithm \cite{pd14} essentially calculates how ``reliable''
 \begin{algorithm}
 \begin{algorithmic}[1]
 \begin{spacing}{1.0}
-    \caption{\textit{Adam Optimizer}.  $(A\circ B)_{ij} = A_{ij}\times B_{ij}$ is the hadamard product of $A$ and $B$.  $(A \oslash B)_{ij} = A_{ij}/B_{ij}$ is Hadamard division.  The hyperparameter $\alpha$ is similar to the learning rate, $\eta$ in SGD.  $\beta_1$ and $\beta_2$ are filter coefficients representing smoothing amount.  The value $\epsilon$ is an arbitrary small number to avoid division by $0$.}
+    \caption{\textit{Adam Optimizer}.  $(A\circ B)_{ij} = A_{ij}\times B_{ij}$ is the Hadamard product of $A$ and $B$.  $(A \oslash B)_{ij} = A_{ij}/B_{ij}$ is Hadamard division.  The hyperparameter $\alpha$ is similar to the learning rate, $\eta$ in SGD.  $\beta_1$ and $\beta_2$ are filter coefficients representing smoothing amount.  The value $\epsilon$ is an arbitrary small number to avoid division by $0$.}
     \Require $\beta_1,\beta_2$
     \Require $\alpha$
     \Require $w$
@@ -104,7 +114,7 @@ The Adam Optimizer algorithm \cite{pd14} essentially calculates how ``reliable''
 \end{algorithmic}
 \end{algorithm}
 
-Adam requires several more hyperparameters as compared to SGD, but the results tend to be less dependent on them.  The parameters $\beta_1$ and $\beta_2$ represent filter coefficients for estimating the first and second moments of the gradient.  Figure \ref{fig:freqz} shows the frequency response with beta ranging from 0.8 to 1.0 logarithmically.  We see that lower $\beta$ represents a bias for lower frequencies.  It turns out that these estimates of $m$ and $v$ are biased, but can be fixed with a simple multiplicative correction (lines 9 and 10).  If you consider the second moment to represent the noise power present in the signal, then the quantity $\hat{m}\oslash \hat{v}$ somewhat represent the signal to noise ratio.  Using this interpretation, this update weighting is somewhat similar to a Wiener filter where the components of the signal which have the most noise are proportionally supressed.
+Adam requires several more hyperparameters as compared to SGD, but the results tend to be less dependent on them.  The parameters $\beta_1$ and $\beta_2$ represent filter coefficients for estimating the first and second moments of the gradient.  Figure \ref{fig:freqz} shows the frequency response with beta ranging from 0.8 to 1.0 logarithmically. Observe that lower $\beta$ represents a bias for lower frequencies.  It turns out that these estimates of $m$ and $v$ are biased, but can be fixed with a simple multiplicative correction (lines 9 and 10).  If you consider the second moment to represent the noise power present in the signal, then the quantity $\hat{m}\oslash \hat{v}$ somewhat represents the signal to noise ratio.  Using this interpretation, this update weighting is somewhat similar to a Wiener filter where the components of the signal which have the most noise are proportionally suppressed.
 
 \begin{figure}
     \centering
@@ -114,13 +124,13 @@ Adam requires several more hyperparameters as compared to SGD, but the results t
 \end{figure}
 
 \subsection{Automatic Differentiation}\label{sec:autodiff}
-In all of the previous training algorithms, we have ignored the computation of the gradient of the loss, $\nabla l(w,x,y)$.  Here we breifly discuss automatic differentiation, a powerful dynamic programming algorithm for computing the gradient of an arbitrary differentiable function.
+In all of the previous training algorithms, computation of the gradient of the loss, $\nabla l(w,x,y)$ has been ignored.  This section briefly discuss automatic differentiation, a powerful dynamic programming algorithm for computing the gradient of an arbitrary differentiable function.
 
-Consider some function which depends on multiple variables.  In computing the function, it will likely be expressed as the compositions of other functions.  An example taken from \cite{} is shown in equation \ref{eq:autodiff}.
+Consider some function which depends on multiple variables.  In computing the function, it will likely be expressed as the compositions of other functions.  An example function taken from \cite{ab15} is given below.
 \begin{align}\label{eq:autodiff}
 f(x_1,x_2) = \log(x_1) + x_1\times x_2 - \sin(x_2)
 \end{align}
-Equation \ref{eq:autodiff} is a composition of $\log$, $\times$, $\sin$, $+$, and $-$.  This composition can be captured in the form of a graph, as seen in figure \ref{fig:graph}.  Starting at the output and working backwards, we can compute the output of the previous required computation.  Automatic differentiation works in much the same way that a normal computation is performed except by applying the chain rule.  For example, in order to compute the derivative with respect to $x_1$ at node $v_7$, representing the function $[\log(x_1) + x_1\times x_2] - [\sin(x_1)]$, we compute $D_{x_1}[\log(x_1) + x_1\times x_2] - D_{x_1}[\sin(x_1)]$.  In order to find the two component values, we look at the nodes associated with those functions where the derivative will either already be computed, or where we will compute the derivative by climbing up the graph the same as in the previous step.  Applying this algorithm for all inputs yields the gradient.
+Equation \ref{eq:autodiff} is a composition of $\log$, $\times$, $\sin$, $+$, and $-$.  This composition can be captured in the form of a graph, as seen in figure \ref{fig:graph}.  Starting at the output and working backwards, one can compute the output of the previous required computation.  Automatic differentiation works in much the same way that a normal computation is performed except by applying the chain rule.  For example, in order to compute the derivative with respect to $x_1$ at node $v_7$, representing the function $[\log(x_1) + x_1\times x_2] - [\sin(x_1)]$, compute $D_{x_1}[\log(x_1) + x_1\times x_2] - D_{x_1}[\sin(x_1)]$.  In order to find the two component values, look at the nodes associated with those functions where the derivative will either already be computed, or where one will compute the derivative by climbing up the graph the same as in the previous step.  Applying this algorithm for all inputs yields the gradient.
 
 \begin{figure}
     \centering

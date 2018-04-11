@@ -1,11 +1,39 @@
+\label{sec:adversarial_text_derivation}
 \noindent
-Now that we have a clear idea of both the domain and numerical representation of words, we may define an adversarial derivation of textual data in the context of a classification model, $f$.  As per the definition of an adversarial derivation, we need only to define the model tolerance, $\epsilon$, as well as the domain metric, $d_D$ and codomain metric, $d_C$.  We will consider primarily two definitions.
+Now that we have a clear idea of both the domain and numerical representation of words, we may define an adversarial derivation of textual data in the context of a classification model, $f$.  As per the definition of an adversarial derivation, we need only to define the model tolerance, $\epsilon$, as well as the domain metric, $d_D$ and codomain metric, $d_C$.  Recall $\rho$ is the discrete metric with $\rho(a,b) = 0$ if $a=b$ and $\rho(a,b)=1$ if $a=b$.
 
 \begin{definition}
-Let $\{v_i\}_{i=1}^N$ be the sequence of vectors obtained from a given word embedding and text sample, then a discrete adversrial derivation is defined has having domain metric, $d_D(v,v^*) = \sum_i^N\rho(v_i,v_i^*)$, codomain metric $d_C(f(v),f(v^*)) = \rho(f(v),f(v^*))$, and tolerance $\epsilon = 1$.
+Let $\{v_i\}_{i=1}^N$ be the sequence of vectors obtained from a given word embedding and text sample.  Then a discrete adversarial derivation is defined using the domain metric, $d_D(v,v^*) = \sum_i^N\rho(v_i,v_i^*)$, codomain metric $d_C(f(v),f(v^*)) = \rho(f(v),f(v^*))$, and tolerance $\epsilon = 1$.
 \end{definition}
 
-That is, a discrete adversarial derivation $\{v_i^*\}$ of sample $\{v_i\}$ is the sample which changes the least amount of words possible, while changing the classification.  This definition is simple, though it may not yield very good results if solved.  For example, a positive movie review, ``This movie was good'' could easily be changed to a negative review by changing just one word resulting in ``This movie was bad''.  These two samples would obviously have different sentiments if read by a human.
+\noindent
+That is, a discrete adversarial derivation $\{v_i^*\}$ of sample $\{v_i\}$ is the sample which changes the fewest number of words possible, while changing the classification.  
+\subsection{Fast Gradient Sign Method}
+One existing technique for textual adversarial derivation is inspired by the fast gradient sign method for images (not discussed in this work).  We will simply refer to it as the fast gradient sign method.  The pseudocode is given in Algorithm \ref{alg:fgsm}. \cite{np16}  Essentially, it says to match the sign of the gradient to the sign of the difference between word vectors as well as possible at every step.  This algorithm is the baseline against which we test our algorithms.  Its performance in the original paper and in our experiments are discussed in Chapter \ref{chap:results}.
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\begin{spacing}{1.0}
+\caption{Fast Gradient Sign Method}
+\Require{$f$} \Comment{Differentiable classifier model}
+\Require{$x$} \Comment{Sequence of words forming a text sample}
+\Require{$W$} \Comment{List of word vectors, a word embedding}
+\State{$y \gets f(x)$}
+\State{$x^* \gets x$}
+\While{$f(x^*) = y$} \Comment{Terminate when misclassification occurs}
+    \State{Randomly select a word index, $i$ in the sequence $x^*$}
+    \State{$diff \gets sgn(x^*[i]-z)$} \Comment{$sgn(x) = 1\text{if $x > 0$ else} -1$}
+    \State{$grad \gets sgn(\nabla_i f(x^*))$} \Comment{$\nabla_i f(x^*)$ is the gradient of f  w.r.t input word $i$}
+    \State{$w \gets \argmin_{z\in W} || diff-grad ||_1$}
+    \State{$x^*[i] \gets w$}
+\EndWhile
+\label{alg:fgsm}
+\end{spacing}
+\end{algorithmic}
+\end{algorithm}
+
+
+%This definition is simple, though it may not yield very good results if solved.  For example, a positive movie review, ``This movie was good'' could easily be changed to a negative review by changing just one word resulting in ``This movie was bad''.  These two samples would obviously have different sentiments if read by a human.
 
 %Clearly the codomain metric, $d_C$ and difference, $\epsilon$ make sense for any defintion in this context, but the domain metric has room for improvement which brings us to the next definition.
 

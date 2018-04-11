@@ -1,4 +1,5 @@
-We used gradient descent to train a word2vec model with noise contrastive estimation.  The hyperparameters we chose are shown in table \ref{tab:embedding_hperparameters}
+\label{sec:word_emb_results}
+We used gradient descent to train a word2vec model with noise contrastive estimation.  All gradients were calculated with the automatic differentiation framework, TensorFlow \cite{ma16}.  The hyperparameters we chose are shown in Table \ref{tab:embedding_hperparameters}.
 
 \begin{table}[h]
 \centering
@@ -13,11 +14,11 @@ We used gradient descent to train a word2vec model with noise contrastive estima
     Vocabulary size & 10,000 \\
     \hline
 \end{tabular}
-\caption{Word embedding hyperparameters}
+\caption{Word embedding hyperparameters.}
 \label{tab:embedding_hperparameters}
 \end{table}
 
-Our corpus was the concatenation of all preprocessed training samples from the training set in the ``Large Movie Review Datasets.'' \cite{am11}  Preprocessing consisted of the steps laid out in table \ref{tab:preproc}
+Our corpus was the concatenation of all preprocessed training samples from the training set in the ``Large Movie Review Dataset.'' \cite{am11}  Preprocessing consisted of the steps laid out in Table \ref{tab:preproc}
 
 \begin{table}[h]
 \centering
@@ -32,11 +33,11 @@ Our corpus was the concatenation of all preprocessed training samples from the t
     Remove extra whitespace & the movie is not good i give it a one\\
     \hline
 \end{tabular}
-\caption{Preprocessing algorithm}
+\caption{Preprocessing Algorithm}
 \label{tab:preproc}
 \end{table}
 
-The processing resulted in a corpus of 5,887,178 words totaling 31,985,233 characters.  Since there are 25,000 training samples, each review is on average about 234 words, and 1279 characters.  Of all 25,000 reviews training reviews, 27 had more than 1024 words.  The word embedding converged to an average noise contrastive loss of about 5.07.   Semantic difference between two words is measured by the angular distance between their embeddings, that is,
+The processing resulted in a corpus of 5,887,178 words totaling 31,985,233 characters.  Since there are 25,000 training samples, each review is on average about 234 words, and 1279 characters.  Of all 25,000 reviews training reviews, 27 had more than 1024 words.  The word embedding converged to an average noise contrastive loss of about 5.07.   Semantic difference between two words is measured by the angular distance between their embeddings, computed as
 
 $$ \frac{cos^{-1}\left(\frac{v^Tu}{||v||_2||u||_2}\right)}{\pi}$$
 
@@ -58,6 +59,6 @@ The eight nearest neighbors for a few common words are shown in table \ref{tab:n
     movie & film& show& story& it& but& really& that& just \\ \hline 
     film & movie& story& show& which& UNK& it& that& but \\ \hline
 \end{tabular}
-\caption{Some examples of nearest neighbors in embedding space}
+\caption{Some examples of nearest neighbors in embedding space.}
 \label{tab:nearest_words}
 \end{table}

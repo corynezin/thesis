@@ -10,7 +10,7 @@ minimize $||r||_2$ subject to:
 \item $f(x + r) \neq f(x)$
 \item $x+r \in [0,1]^m$
 \end{enumerate}
-We may also denote the adversarial derivation as $x^* = x + r$
+We may also denote the adversarial derivation as $x^* = x + r$.
 
 \noindent
 In words, an adversarial derivation is a sample with the minimum distance to a true sample such that it is classified as something different.  We also require that every element stays in the interval $x_n+r_n \in [0,1]$ because actual pixels must remain in some constant bounded interval.
@@ -19,7 +19,7 @@ In words, an adversarial derivation is a sample with the minimum distance to a t
 A classifier, $f$, over a set, $D$, is a mapping, $f : D\rightarrow \{1,2,\dots,K\} = C$.
 \end{definition}
 
-Clearly, this adversarial derivation definition does not translate well to the problem of natural language classification where the domain is not even numeric.  We give a more general  constrained optimization defintion below, which we will adapt to the problem of creating adversarial derivations for text.
+Clearly, this adversarial derivation definition does not translate well to the problem of natural language classification where the domain is not even numeric.  We give a more general  constrained optimization definition below, which we will adapt to the problem of creating adversarial derivations for text.
 
 \begin{definition}
 A distance function, $d$, over a set $S$ is a mapping, $d:S\times S\rightarrow \mathbb{R}$ such that $\forall x,y,z \in S$:
@@ -44,7 +44,7 @@ A distance function, $d$, over a set $S$ is a mapping, $d:S\times S\rightarrow \
 It is also true that if $S$ is a normed linear space, $d(x,y) = ||x-y||$ is a distance metric over that space.
 
 \begin{definition}
-Let $d_D$ be a distance function over $D$, and $d_C$ be a distance function over $C$.  Then the point $x^*$ is an adversarial derivation (AD) of $x\in D$ with tolerance $\epsilon > 0$ given by
+Let $d_D$ be a distance function over $D$, and $d_C$ be a distance function over $C$.  Then the point $x^*$ is an adversarial derivation (AD) of $x\in D$ with tolerance $\epsilon > 0$ if it is a solution to the following constrained optimization problem:
 \begin{equation*}
 \begin{aligned}
 & \underset{x^*\in D(f)}{\text{min}}
@@ -56,9 +56,9 @@ Let $d_D$ be a distance function over $D$, and $d_C$ be a distance function over
 \end{definition}
 
 \noindent
-Note that image classifier would have the domain $[0,1]^m$ and codomain $ \{1,...K\} $ where $K$ is the number of classes.  So the definition of an adversarial derivation for an image classifier is the same as the general definition if we let $\epsilon = 1$, $d_D(x,x^*) = ||x-x^*||^2$, $d_C(y,y^*) = |y-y^*|$.
+Note that an image classifier would have the domain $[0,1]^m$ and codomain $ \{1,...K\} $ where $K$ is the number of classes.  So the definition of an adversarial derivation for an image classifier is the same as the general definition if we let $\epsilon = 1$, $d_D(x,x^*) = ||x-x^*||^2$, $d_C(y,y^*) = |y-y^*|$.
 
-As long as the function, $f$, has a non-singleton codomain, the constraint is satisfiable for for small enough $\epsilon$.  In the case that the solution does not exist, $\delta = \inf \{d_D(x,x^*) \text{ s.t. } d_C(f(x),f(x^*)) > \epsilon\}$ exists, in which case we may find $\hat{x}$ that is arbitrarily close to $\delta$.  Satisfiability is true from the fact that for any distance metric, $d(y,y^*) > 0$ for $y \neq y^*$.  That all being said, the distance between the sample and the derived sample may be so large that they are easily recognized to be different.  We therefore define a similar problem with very different properties
+As long as the function, $f$, has a non-singleton codomain, the constraint is satisfiable for small enough $\epsilon$.  In the case that the solution does not exist, $\delta = \inf \{d_D(x,x^*) \text{ s.t. } d_C(f(x),f(x^*)) > \epsilon\}$ exists, in which case we may find $\hat{x}$ that is arbitrarily close to $\delta$.  Satisfiability is true from the fact that for any distance metric, $d(y,y^*) > 0$ for $y \neq y^*$.  That all being said, the distance between the sample and the derived sample may be so large that they are easily recognized to be different.  We therefore define a similar problem with very different properties
 
 \begin{definition}
 An absolutely adversarial derivation (AAD) of $x$ with similarity $\delta$, difference $\epsilon$, domain metric $d_D$, and codomain metric $d_C$ is given by any solution to the following two constraints.
@@ -71,6 +71,7 @@ An absolutely adversarial derivation (AAD) of $x$ with similarity $\delta$, diff
 \end{equation*}
 \end{definition}
 
+\noindent
 In this less relaxed version of the problem, a solution may not exist.  In fact, for a given continuous function, $f$, defined on an open domain, and tolerance, $\epsilon$ it is guaranteed that $$\exists \delta > 0 \text{ s.t. } d_C(f(x),f^*(x)) < \epsilon$$ meaning no solution exists.  However, it appeals to a more intuitive concept and allows for the possibility of a model immune to adversarial attacks.  It says that the sample and its absolute adversarial derivation must be sufficiently close and the distance between the model outputs must be sufficiently far.  
 
 It is easy to see that if an AAD exists for a given sample, then any AD is also an AAD.  This means we may solve the more relaxed problem to obtain a valid solution, and so we will work with the more practical objective of creating ADs.
