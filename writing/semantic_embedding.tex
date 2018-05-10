@@ -1,9 +1,9 @@
-Many modern machine learning techniques require a numerical representation of data and therefore cannot work with natural language directly.  There are several different representations which have advantages and drawbacks.  We will specifically look at vector space representations which are useful for classifying documents.  This chapter will cover the simple bag-of-words model of documents and the more advanced word2vec model.
+Many modern machine learning techniques require a numerical representation of data and therefore cannot work with natural language directly.  There are several different representations which have their own advantages and drawbacks.  We will specifically look at vector space representations which are useful for classifying documents.  This chapter will cover the simple bag-of-words model of documents and the more advanced \textit{word2vec} model.
 
 \subsection{Bag-of-words} \label{sec:bow}
-A bag-of-words model is a very simple numerical representation of a text document.  The model assumes that a given document has already been tokenized.  In bag-of-words, a single document is represented as the multiset of all tokens in the document with no regard toward ordering.  This means that the conversion is, in general, not invertible and so the original document cannot be retrieved from this representation.
+A bag-of-words model is a very simple numerical representation of a text document.  The model assumes that a given document has already been tokenized, i.e. that the plain string of characters has been separated into a list words.  In bag-of-words, a single document is represented as the multiset of all tokens in the document with no regard toward ordering.  This means that the conversion is, in general, not invertible and so the original document cannot be retrieved from this representation.
 
-Consider the document
+Consider for example:
 \begin{center}
 \texttt{"This movie is not terrible, this movie is amazing!"}
 \end{center}
@@ -16,13 +16,13 @@ Notice that the above object is not a set, but a multiset since it contains one 
 \texttt{\{this, movie, is, not, amazing, this, movie, is, terrible\}}
 \end{center}
 
-This object is conveniently represented as a hash table mapping tokens directly to their frequency in the document like the example in Table \ref{tab:hash}
-\begin{table}[h]
+This object is conveniently represented as a hash Table mapping tokens directly to their frequency in the document, like the example in Table \ref{tab:hash}
+\begin{table}
 \centering
 \begin{tabular}{ r l }
- this & 3 \\ 
- movie & 3 \\  
- is & 3 \\ 
+ this & 2 \\ 
+ movie & 2 \\  
+ is & 2 \\ 
  not & 1 \\
  terrible & 1 \\
  amazing & 1 \\
@@ -31,29 +31,29 @@ This object is conveniently represented as a hash table mapping tokens directly 
 \label{tab:hash}
 \end{table}
 
-In the context of comparing two documents, it is sometimes more useful to represent a document as a vector.  In order to represent every possible document as a vector of the same length, then the number of elements must be equal to the total number of possible tokens, or the size of the vocabulary.  For example, table \ref{tab:hash} might be represented as 
+In the context of comparing two documents, it is sometimes more useful to represent a document as a vector.  In order to represent every possible document as a vector of the same length, then the number of elements must be equal to the total number of possible tokens, or the size of the vocabulary.  For example, Table \ref{tab:hash} might be represented as 
 \begin{singlespace}
 \begin{align}
 x = 
 \begin{bmatrix}
-0 & \cdots & 3 & \cdots & 3 & \cdots & 3 & \cdots & 1 & \cdots & 1 & \cdots & 1 & \cdots & 0
+0 & \cdots & 2 & \cdots & 2 & \cdots & 2 & \cdots & 1 & \cdots & 1 & \cdots & 1 & \cdots & 0
 \end{bmatrix}^\mathsf{T}
 \end{align}
 \end{singlespace}
 \noindent
-with dots representing some amount of zeros.  With this representation, one simple measure of document similarity is given by the \textit{cosine similarity}, $s_\theta(d_1,d_2)$, of two document vectors
+with dots representing some amount of zeros.  With this representation, one simple measure of document similarity is given by the \textit{cosine similarity}, $s_\theta(d_1,d_2)$, of two document vectors:
 \begin{align}
 s_\theta(x_1,x_2) = \frac{x_1\cdot x_2}{||x_1||_2 ||x_2||_2}
 \end{align}
 By the Cauchy–Schwarz inequality, this value has an upper bound of $1$, which is achieved if and only if the two documents contain the same words with the same relative frequency.
 
-The vector representation of documents also gives a hint as to how one might represent individual words numerically.  If $i$ is the index associated with the $i^{th}$ word in a vocabulary, then one may associate that word with the standard basis vector $e_i$.  Where every component of $e_i$ is $0$ except for the $i^{th}$ which is $1$.  Let $e_m$ be the standard basis vector associated with word $m$, then the vector representation for a document multiset, $M$, would be given by
+The vector representation of documents also gives a hint as to how one might represent individual words numerically.  If $i$ is the index associated with the $i^{th}$ word in a vocabulary, then one may associate that word with the standard basis vector $e_i$.  Where every component of $e_i$ is $0$ except for the $i^{th}$ which is $1$.  This is known as one-hot encoding.  Let $e_m$ be the standard basis vector associated with word $m$, then the vector representation for a document multiset, $M$, would be given by
 \begin{equation}
 x = \sum_{m\in M} v(m)e_m
 \end{equation}
 where $v$ is the multiplicity of element $m$ in $M$.
 
-In most cases, an actual language processing system will not use the raw frequency, $n_{t,d}$, of a term $t$ and document $d$, but rather some term frequency function, $tf(t,d)$, of the raw frequency and given document which results in what is called a \textit{term weighting}.  Common choices are \cite{cm08}:
+In most cases, an actual language processing system does not use the raw frequency, $n_{t,d}$, of a term $t$ and document $d$, but rather some term frequency function, $tf(t,d)$, of the raw frequency and given document which results in what is called a \textit{term weighting}.  Common choices are \cite{cm08}:
 
 \begin{enumerate}
 \item $tf(t,d) = \{1 \text{ if $t$ appears in $d$; else } 0\}$
@@ -71,58 +71,67 @@ where $d$ is the number of documents containing the term $t$, and $D$ is the num
 tfidf(t,d,D) = tf(n,d) \times idf(t,D)
 \end{equation}
 
-The bag-of-words model has the advantage of extreme simplicity, however it does not represent complex documents well since it has no regard for ordering.  In addition, using this representation as a feature for machine learning is problematic since the number of features is equal to the vocabulary size which should be a very large number.  We now look at latent semantic analysis, originally a method for indexing documents, which represents words and documents as vectors.
+The bag-of-words model has the advantage of extreme simplicity.  However, it does not represent complex documents well since it has no regard for ordering.  In addition, using this representation as a feature for machine learning is problematic since the number of features is equal to the vocabulary size which should be a very large number.  The following section discusses latent semantic analysis, originally a method for indexing documents, which represents words and documents as vectors.
 
 \subsection{Latent Semantic Analysis}
 Latent semantic analysis (LSA) is essentially a dimensionality reduction technique similar to principle component analysis.  At its core is a truncated singular value decomposition (SVD) which is responsible for finding ``key concepts'' behind words.  A set of word vectors for some vocabulary and set of documents can be found with the following steps:
 
 \begin{enumerate}
 \item Populate the term-document matrix, $M$: $M_{i,j} = tf(t_i,d_j)$
-\item Using SVD, decompose $M$: $M = U\Sigma V^*$.  $U$ and $V$ are unitary while $\Sigma$ is diagonal.
+\item Using SVD, decompose $M$: $M = U\Sigma V^*$.  $U$ and $V$ are square while $\Sigma$ is diagonal.
 \item Keep the largest $k$ diagonal values in $\Sigma$, remove the other values' rows and columns and call the resulting matrix $\hat{\Sigma}$.
 \item The vector corresponding to the $i^{th}$ word is the transpose of the $i^{th}$ row of $U\hat{\Sigma}$, a vector of $k$ elements.
 \end{enumerate}
 \noindent
 Using this method, words which appear in similar frequency across similar types of documents will have similar vectors, in the sense of cosine similarity.  Sample noise is reduced by the dimensionality reduction achieved by truncating $\Sigma$.
 
-\subsection{Word2vec}
-Word2vec \cite{tm13_og} is an extremely useful model which learns vector representations of individual words.  Word vectors are learned in an unsupervised fashion, meaning that very large, unlabeled data sets can be leveraged during training.  There are two word2vec models which are complementary:  Continuous Bag-of-Words (CBOW) and Continuous Skip-gram (Skip-gram).  Continuous Bag-of-Words aims to create vectors which maximize accuracy of classifying a word given its surrounding words.  Skip-gram aims to create vectors which maximize the accuracy of predicting surrounding words given the center word.
+\subsection{Word2vec}\label{sec:word2vec}
+\textit{Word2vec} \cite{tm13_og} is an extremely useful model which learns vector representations of individual words.  Word vectors are learned in an unsupervised fashion, meaning that very large, unlabeled data sets can be leveraged during training.  There are two \textit{word2vec} models which are complementary:  Continuous Bag-of-Words (CBOW) and Continuous Skip-gram (Skip-gram).  CBOW aims to create vectors which maximize accuracy of classifying a word given its surrounding words.  Skip-gram aims to create vectors which maximize the accuracy of predicting surrounding words given the center word.
 
-In the skip-gram model, the function used for word prediction is a simple hourglass shaped log-linear model.  Given a one-hot encoded word vector, as described in section \ref{sec:bow}, transpose it and right multiply it by some matrix, $A \in M_{V\times D}(\mathbb{R})$.  Note that since the vector is one-hot encoded, this is the same as simply selecting a row from the matrix $A$.  Now take the result and then right multiply some matrix, $B \in M_{D\times V}(\mathbb{R})$.  Both of these multiplications combined are equivalent to right multiplying the one-hot encoded vector by some matrix $C \in M_{V\times V}(\mathbb{R})$, but of course much fewer values must be stored and $C$ is constrained to being at most rank $D$.  The resulting vector is then fed through either a softmax or hierarchical softmax function, yielding a ``probability vector'' which indicates the estimated probability of any word in the vocabulary being within some skip window, $R$ of the center word.
+In the skip-gram model, the function used for word prediction is a simple hourglass shaped log-linear model.  Given a one-hot encoded word vector, as described in section \ref{sec:bow}, transpose it and right multiply it by some matrix, $A \in M_{V\times D}(\mathbb{R})$.  The dimension $V$ represents the size of the vocabulary and $D$ represents the number of dimensions of the word embedding.  In general, $V$ should be much greater than $D$.  Note that since the vector is one-hot encoded, this is the same as simply selecting a row from the matrix $A$.  Now take the result and then right multiply some matrix, $B \in M_{D\times V}(\mathbb{R})$.  Both of these multiplications combined are equivalent to right multiplying the one-hot encoded vector by some matrix $C \in M_{V\times V}(\mathbb{R})$, but of course much fewer values must be stored and $C$ is constrained to being at most rank $D$.  The resulting vector is then fed through either a softmax (given by equation (\ref{eq:softmax})) or hierarchical softmax function (defined later in this section), yielding a probability vector which indicates the estimated probability of any word in the vocabulary being within some skip window, $R$ of the center word.
+\begin{align}\label{eq:softmax}
+\sigma(\vec{x}) = \frac{\exp(x_i)}{ \sum_i \exp(x_i)}
+\end{align}
+In the CBOW model, the operation is very similar except that a multiple-hot encoded vector is used at the input.  That is, instead of one element of the vector being $1$ while the rest are $0$, multiple elements are $1$ or more indicating the words present within some skip window, $R$ of the center word.  Recalling section \ref{sec:bow}, this is the bag-of-words representation of the window surrounding the center word.  As in the skip-gram model, the algorithm right multiplies the transpose of this vector by some matrix, $A \in M_{V\times D}(\mathbb{R})$.  In the case of skip-gram this amounted to selecting a row.  Now that the vector is multiple-hot encoded, this amounts to adding several rows of the matrix together.  Again multiply the resulting vector by some matrix, $B \in M_{D\times V}(\mathbb{R})$ and feed the result through a softmax function to obtain a probability vector indicating the likelihood that any word in the vocabulary is the center word.
 
-In the CBOW model, the operation is very similar except that a multiple-hot encoded vector is used at the input.  That is, instead of one element of the vector being $1$ while the rest are $0$, multiple elements are $1$ or more indicating the words present within some skip window, $R$ of the center word.  Recalling section \ref{sec:bow}, this is the bag-of-words representation of the window surrounding the center word.  As in the skip-gram model, the algorithm right multiplies the transpose of this vector by some matrix, $A \in M_{V\times D}(\mathbb{R})$.  In the case of skip-gram this amounted to selecting a row, now that the vector is multiple-hot encoded, this amounts to adding several rows of the matrix together.  We again multiply the resulting vector by some matrix, $B \in M_{D\times V}(\mathbb{R})$ and feed the result through a softmax function to obtain a probability vector indicating the likelihood that any word in the vocabulary is the center word.
+In either case, all weights are randomly initialized, usually with a Gaussian random variable generator.  The cross entropy loss is used as the loss function, and all weights are trained using gradient descent and automatic differentiation (see sections \ref{sec:sgd} and \ref{sec:autodiff}).  The target vector represents some subset of all words within the skip window, though not necessarily the entire set.  The number of skips represents how many times to sample words from the skip window to obtain the target vector.  If the number of skips is double the skip window, the algorithm samples all words.  Cross entropy is given by:
+\begin{align}\label{eq:crossent}
+L(x,y,f) = \sum_i^M I_{y_i} \log(f(x_i))
+\end{align}
+where $I_{y_i} = 1$ if y is the $i^{th}$ class number, else $I_{y_i} = 0$
 
-In either case, all weights are randomly initialized, usually with a Gaussian random variable generator.  The softmax cross entropy loss is used as the loss function, and all weights are trained using gradient descent and automatic differentiation (see sections \ref{sec:sgd} and \ref{sec:autodiff}).  The target vector represents a subset of all words within the skip window, though not necessarily the entire set.  The number of skips represents how many times we sample the skip window to obtain a target vector.  If the number of skips is double the skip window, we sample all words.
-
-This method is similar to latent semantic analysis in that it is projecting high dimensional ``term vectors'' onto lower dimensional spaces.  The algorithm differs in some key ways.  First, the term-document matrix is essentially replaced with a term-term matrix where frequency is associated between terms and terms rather than terms and documents.  This makes it possible to learn a word2vec representation with just one document or corpus.  Second the time complexity for computing the singular value decomposition of the term-term matrix is $\mathcal{O}(min(VT^2,V^2T)) = \mathcal{O}(V^2T)$ where $V$ is the vocabulary size and $T$ is the number of terms in the data set, including repeated terms.  This value is very large for a large vocabulary.  On the other hand, the time complexity for training a word2vec representation is $E\times T\times C\times D\times \log V$.  Where $E$ is the number of training epochs, $C$ is the size of the maximum time difference of words, and $D$ is the dimension of each word.  Word2vec is then clearly a good candidate for scenarios with large vocabularies.
+This method is similar to latent semantic analysis in that it is projecting high dimensional ``term vectors'' onto lower dimensional spaces.  The algorithm differs in some key ways.  First, the term-document matrix is essentially replaced with a term-term matrix where frequency is associated between terms and terms, rather between than terms and documents.  This makes it possible to learn a \textit{word2vec} representation with just one document or corpus.  Second, the time complexity for computing the singular value decomposition of the term-term matrix is $\mathcal{O}(min(VT^2,V^2T)) = \mathcal{O}(V^2T)$ where $V$ is the vocabulary size and $T$ is the number of terms in the data set, including repeated terms.  This value is very large for a large vocabulary.  On the other hand, the time complexity for training a \textit{word2vec} representation is $E\times T\times C\times D\times \log V$, where $E$ is the number of training epochs, $C$ is the size of the maximum time difference of words, and $D$ is the dimension of each word.  Word2vec is then clearly a good candidate for scenarios with large vocabularies.
 
 There are several extensions and improvements which improve the quality of the word vectors as well as the training speed. \cite{tm13} Here we discuss hierarchical softmax, negative contrastive estimation, and subsampling of frequent words.
 
-The typical softmax function with $N$ inputs has $N$ outputs.  If we are classifying words from a vocabulary this value is typically very large, on the order of $10^4 - 10^7$.  Hierarchical softmax is a computationally efficient approximation which reduces the computational load from $N$ to about $\log_2(N)$.  This optimization significantly changes the structure of the algorithm.  Instead of computing the output as a matrix multiply followed by a softmax, the operation is performed in a hierarchical fashion.  A given node, $n$ in a binary tree is assigned a vector, $v_n$ (as opposed to each row in a matrix).  Suppose the path to a word $u$ is given by the set of nodes $p_u$, including $u$.  Then the hierarchical softmax of $u$ and word $w$ with vector $v_w$, is given by equation \ref{eq:hierarchical_softmax}
+The typical softmax function with $N$ inputs has $N$ outputs.  If one is classifying words from a vocabulary this value is typically very large, on the order of $10^4 - 10^7$.  Hierarchical softmax is a computationally efficient approximation which reduces the computational load from $N$ to about $\log_2(N)$.  This optimization significantly changes the structure of the algorithm.  Instead of computing the output as a matrix multiply followed by a softmax, the operation is performed in a hierarchical fashion.  A given node, $n$ in a binary tree is assigned a vector, $v_n$ (as opposed to each row in a matrix).  Suppose the path to a word $u$ is given by the set of nodes $p_u$, including $u$.  Then the hierarchical softmax of $u$ and word $w$ with vector $v_w$, is given by:
 \begin{equation}\label{eq:hierarchical_softmax}
 \hat{\sigma}(u,w) = \prod_{n\in p_u} \sigma (s(n)\times v_n^Tv_w)
 \end{equation}
-The sign function $s(n)$ arbitrarily maps nodes to a value of either $1$ or $-1$ with the rule that two children of a given node cannot have the same sign.  If we assign the edge connecting node $n$ to its parent the value $\sigma (s(n)\times v_n^Tv_w)$, we can think of each edge's value as being the conditional probability that a connecting child node is picked given that all of its ancestors have been picked.  Since $\sigma(-x) + \sigma(x) = 1$, the sum of any two edge values connecting to children of a node is $1$ meaning this is a valid conditional probability distribution.  Now suppose that $L$ nodes are in the path, $p_u$, before $u$.  Denote them as $n_1,n_2,\dots,n_L$.  The probability of picking word $u$ given the word $w$ is given by the probability of picking all nodes on the path from the root to $u$, inclusive:
+The sign function $s(n)$ arbitrarily maps nodes to a value of either $1$ or $-1$ with the rule that two children of a given node cannot have the same sign.  Assigning the edge connecting node $n$ to its parent the value $\sigma (s(n)\times v_n^Tv_w)$, consider each edge's value as being the conditional probability that a connecting child node is picked given that all of its ancestors have been picked.  Since $\sigma(-x) + \sigma(x) = 1$, the sum of any two edge values connecting to children of a node is $1$ meaning this is a valid conditional probability distribution.  Now suppose that $L$ nodes are in the path, $p_u$, before $u$.  Denote them as $n_1,n_2,\dots,n_L$.  The probability of picking word $u$ given the word $w$ is given by the probability of picking all nodes on the path from the root to $u$, inclusive:
 \begin{align}
 P(u|w) \label{eq:joint} &=P(u,n_L,n_{L-1},\dots,n_1|w)\\ \label{eq:chain}
 &=P(u|n_L,\dots,n_1,w)\times P(n_L|n_{L-1},\dots,n_1,w)\times \cdots \times P(n_1|w)\\
 &=\hat{\sigma}(u,w)
 \end{align}
-Equation \ref{eq:chain} follows from \ref{eq:joint} by the chain rule of probability.  Since the largest length in the tree is typically not greater than $\log_2(V)$, this method gives exponential speedup compared to a linear calculation.
+Equation (\ref{eq:chain}) follows from (\ref{eq:joint}) by the chain rule of probability.  Since the largest length in the tree is typically not greater than $\log_2(V)$, this method gives exponential speedup compared to a linear calculation.
 
-The alternative, which we used in our study, is negative sampling, a simplification of  or negative contrastive estimation. \cite{mg12} Instead of a typical softmax cross entropy loss,  we can use a modified loss with drastically reduced computation complexity.  Negative sampling (NEG) is defined by maximizing the objective in equation \ref{eq:neg}
+The alternative, which was used in this study, is negative sampling, a simplification of negative contrastive estimation. \cite{mg12} Instead of a typical cross entropy loss, negative contrastive estimation is a modified loss with drastically reduced computational complexity.  Let $u$ be one of the target words, $\hat{v}_u$ is the column in the second layer matrix corresponding to word $u$, $w$ is the center word, k is the number of negative samples, and $w_i$ is drawn randomly from the distribtuion $P(w)$.  If we define the objective $G$ as:
 \begin{align}\label{eq:neg}
 G(u,w) = \log \sigma (\hat{v}_u^Tv_w) + \sum_{i=1}^{k} \E{\log\sigma(-\hat{v}_{w_i}^Tv_w)}
 \end{align}
-where $u$ is one of the target words, $\hat{v}_u$ is the column in the second layer matrix corresponding to word $u$, $w$ is the center word, k is the number of negative samples, and $w_i \sim P(w)$.  The objective increases as the $w$ vector becomes more similar to the $u$ vector while becoming less similar to ``noise'' vectors, $v_{w_i}$.  This reduces the computation of size $V$ to one of size $k$, a small constant usually on the order of $5-20$.  $P(w)$ is a probability mass function, a free parameter that must be chosen by the user.  The authors of \cite{tm13} found that the probability mass function given in equation \ref{eq:pmf} worked well.
+Then the objective increases as the $w$ vector becomes more similar to the $u$ vector while becoming less similar to ``noise'' vectors, $v_{w_i}$.
+ Negative sampling (NEG) is defined by maximizing the objective in equation \ref{eq:neg}
+
+This method reduces the computation of size $V$ to one of size $k$, a small constant usually on the order of $5-20$.  $P(w)$ is a probability mass function, a free parameter that must be chosen by the user.  The authors of \cite{tm13} found that the following probability mass function works well:
 \begin{align}\label{eq:pmf}
 P(w) = \frac{f(w)^{3/4}}{\sum_{i=1}^V(f(w_i)^{3/4})}
 \end{align}
 where $f(w)$ is the fraction of times the word $w$ appears in the corpus.  
 
-Finally, performance can be improved by subsampling frequently occurring words like ``in'', ``the'' and ``a''.  These words usually do not offer much information about their surrounding words.  This is especially true in the skip-gram model which tries to classify surrounding words based on the center word.  Given the word ``the'' it is near impossible to say anything about the words within a modest context size.
+Finally, performance can be improved by subsampling frequently occurring words like ``in'', ``the'' and ``a''.  These words usually do not offer much information about their surrounding words.  This is especially true in the skip-gram model which tries to classify surrounding words based on the center word.  Given the word ``the,'' it is nearly impossible to say anything about the words within a modest context size.
 
-This effect can be avoided by randomly removing words from the training set, with higher probability if they are more common.  The probability of discarding a word is given by $P(w)$ which again, is a free parameter.  The authors of \cite{tm13} chose the function given in equation \ref{eq:subsample}
+This effect can be avoided by randomly removing words from the training set, with higher probability if they are more common.  The probability of discarding a word is given by $P(w)$ which, again, is a free parameter.  The authors of \cite{tm13} chose the following:
 \begin{align}\label{eq:subsample}
 P(w) = 
 \begin{cases}
@@ -130,4 +139,4 @@ P(w) =
 1 - \sqrt{\frac{t}{f(w)}} & \text{else}
 \end{cases}
 \end{align}
-Where the threshold $t$ is another free parameter.  The function was chosen since it is non-decreasing and therefore preserved frequency rank, and also because it ``aggressively subsamples words whose frequency is greater than $t$. \cite{tm13}
+where the threshold $t$ is another free parameter.  The function was chosen since it is non-decreasing and therefore preserved frequency rank, and also because it ``aggressively subsamples words whose frequency is greater than $t$.'' \cite{tm13}

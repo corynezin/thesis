@@ -1,0 +1,22 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces Hash table representation of a multiset\relax }}{26}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Word embedding hyperparameters.\relax }}{40}
+\contentsline {table}{\numberline {4.2}{\ignorespaces Preprocessing Algorithm\relax }}{41}
+\contentsline {table}{\numberline {4.3}{\ignorespaces Some examples of nearest neighbors in embedding space. UNK is a symbol for a word that is not in the vocabulary.\relax }}{41}
+\contentsline {table}{\numberline {4.4}{\ignorespaces Training Accuracy\relax }}{42}
+\contentsline {table}{\numberline {4.5}{\ignorespaces Testing Accuracy\relax }}{43}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Time and space complexities for full search with varying levels of parallelization.\relax }}{52}
+\contentsline {table}{\numberline {5.2}{\ignorespaces Time and space complexities for full search with sample length capped at $C$.\relax }}{54}
+\contentsline {table}{\numberline {5.3}{\ignorespaces Time and space complexities for window search with a window of size $C$.\relax }}{55}
+\contentsline {table}{\numberline {5.4}{\ignorespaces Time and space complexities for gradient assisted window search with a window of size $C$ and taking the top $K$ words.\relax }}{56}
+\contentsline {table}{\numberline {5.5}{\ignorespaces Overall time complexities for several search algorithms extended with an exponential search for multi-word replacement. These complexities assume the second tier of parallelization found in tables 5.1\hbox {} through 5.4\hbox {}.\relax }}{59}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{\ignorespaces Summary statistics for white box experiment. These numbers correspond to the full distributions visualized in figure 6.1\hbox {}.\relax }}{62}
+\contentsline {table}{\numberline {6.2}{\ignorespaces Summary statistics for the gray box experiment. These numbers correspond to the full distributions visualized in figure 6.4\hbox {}. Failures are not counted toward mean, median, nor mode.\relax }}{65}
+\contentsline {table}{\numberline {6.3}{\ignorespaces Summary statistics for the black box experiment. These numbers correspond to the full distributions visualized in figure 6.6\hbox {}. Failures are not counted toward mean, median, nor mode.\relax }}{67}
+\addvspace {10\p@ }
+\addvspace {10\p@ }

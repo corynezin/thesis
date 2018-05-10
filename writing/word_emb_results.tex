@@ -1,5 +1,5 @@
 \label{sec:word_emb_results}
-We used gradient descent to train a word2vec model with noise contrastive estimation.  All gradients were calculated with the automatic differentiation framework, TensorFlow \cite{ma16}.  The hyperparameters we chose are shown in Table \ref{tab:embedding_hperparameters}.
+In our example experiment, we used gradient descent to train a word2vec model with negative sampling.  All gradients were calculated with the automatic differentiation framework, TensorFlow \cite{ma16}.  The hyperparameters chosen are shown in Table \ref{tab:embedding_hperparameters}.
 
 \begin{table}[h]
 \centering
@@ -42,7 +42,7 @@ The processing resulted in a corpus of 5,887,178 words totaling 31,985,233 chara
 $$ \frac{cos^{-1}\left(\frac{v^Tu}{||v||_2||u||_2}\right)}{\pi}$$
 
 \noindent
-The eight nearest neighbors for a few common words are shown in table \ref{tab:nearest_words}.  We can see that the first few nearest neighbors are fairly high quality, and would usually make grammatical sense for replacement in a sentence.  The quality of replacement falls off quickly after that however.
+The eight nearest neighbors for a few common words are shown in Table \ref{tab:nearest_words}.  The first few nearest neighbors are generally fairly high quality, and would usually make grammatical sense for replacement in a sentence.  The quality of replacement falls off quickly after that however.
 
 \begin{table}[h]
 \centering
@@ -59,6 +59,6 @@ The eight nearest neighbors for a few common words are shown in table \ref{tab:n
     movie & film& show& story& it& but& really& that& just \\ \hline 
     film & movie& story& show& which& UNK& it& that& but \\ \hline
 \end{tabular}
-\caption{Some examples of nearest neighbors in embedding space.}
+\caption{Some examples of nearest neighbors in embedding space.  UNK is a symbol for a word that is not in the vocabulary.}
 \label{tab:nearest_words}
 \end{table}

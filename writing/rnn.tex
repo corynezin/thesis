@@ -6,7 +6,7 @@ While a multilayer perceptron is a function $f:\mathbb{R}^n\rightarrow \mathbb{R
 
 \subsection{Overview}
 
-Of course, the multilayer perceptron could be extended match this if one windows the sequence, compute the output, and then slide the input window.  What truly separates RNNs from MLPs is the fact that an RNN's output depends on its ``state'' at previous time steps.  In particular, denoting the input sequence as $x = (x_1,x_2,\dots,x_k)$ then the states at time steps $1,\dots,k$ are given by equations \ref{eq:rnn_st_start}-\ref{eq:rnn_st_end}.
+Of course, the multilayer perceptron could be extended to match this if one windows the sequence, computes the output, and then slides the input window.  What truly separates recurrent neural networks from multilayer perceptrons is the fact that an RNN's output depends on its ``state'' at previous time steps.  In particular, denoting the input sequence as $x = (x_1,x_2,\dots,x_k)$, the states at time steps $1,\dots,k$ are given by the following:
 
 \begin{align}\label{eq:rnn_st_start}
 S_1 &= s(x_1,S_0)\\
@@ -15,7 +15,7 @@ S_3 &= s(x_3,s(x_2,s(x_1,S_0)))\\ \nonumber
 &\vdots\\
 S_k &= r(x_k,S_{k-1})\label{eq:rnn_st_end}
 \end{align}
-And the outputs are given by equations \ref{eq:rnn_out_start}-\ref{eq:rnn_out_end}
+And the outputs are given by
 \begin{align}\label{eq:rnn_out_start}
 R_1 &= r(x_1,S_1)\\
 R_2 &= r(x_2,r(x_1,S_1))\\
@@ -33,7 +33,7 @@ Some of the first known RNNs, now known as ``simple recurrent networks'' are the
 S_k &= \sigma_S(W_Sx_k+U_SS_{k-1}+b_S\label{eq:elman_s})\\
 R_k &= \sigma_R(W_RS_k+b_R)\label{eq:elman_y}
 \end{align}
-while the Jordan update equations are given by the equations:
+while the Jordan update equations are given by:
 \begin{align}
 S_k &= \sigma_S(W_Sx_k+U_R R_{k-1}+b_S) \label{eq:newj_s} \\
 R_k &= \sigma_R(W_R S_k + b_R) \label{eq:newj_y}
@@ -43,9 +43,9 @@ The Elman equations are already in a form consistent with the given framework.  
 S_k &= \sigma_S(W_Sx_k+U_R \sigma_R(W_R S_{k-1} + b_R)+b_S)\label{eq:jordan_s}\\
 R_k &= \sigma_R(W_R S_k + b_R) \label{eq:jordan_y}
 \end{align}
-The functions $\sigma_S$ and $\sigma_R$ are sigmoidal activation functions.  The parameters $W_S$,$W_R$, and $U_R$ are matrices, $b_S$ and $b_R$ are bias vectors.
+The functions $\sigma_S$ and $\sigma_R$ are sigmoidal activation functions.  The parameters $W_S$,$W_R$, and $U_R$ are matrices, $b_S$ and $b_R$ are vectors.
 
-A result analogous to the universal approximation theorem was proved in \cite{hs91}.  Given mild conditions on $r$ and $s$, similar to those of the universal approximation theorem, a recurrent neural net of sufficiently large size is capable of simulating a universal Turing machine.  This means that even a simple RNN (like a Jordan or Elman network) could compute any function, or perform any algorithm that can be performed by a regular computer.  Of course just as with the universal approximation theorem, this says nothing about what is required to train such a network, how many resources it would require, or how efficiently it would operate.
+A result analogous to the universal approximation theorem was proved in \cite{hs91}.  Given mild conditions on $r$ and $s$, similar to those of the universal approximation theorem, a recurrent neural net of sufficiently large size is capable of simulating a universal Turing machine.  This means that even a simple RNN (like a Jordan or Elman network) can compute any function, or perform any algorithm that can be performed by a regular computer.  Of course just as with the universal approximation theorem, this says nothing about what is required to train such a network, how many resources it would require, or how efficiently it would operate.
 
 \subsection{Long Short-Term Memory}
 Consider computing the derivative of the output of a recurrent neural network with respect to one of its feedback weights, $w$.  By the chain rule:
@@ -61,7 +61,7 @@ log(R_k'(x_k,S_k)) + \sum_{i=1}^k \log(s'(x_i,S_{i-1}))
 \end{align}
 Although it is hard to formally say anything about this value, intuitively since values are being accumulated over time, the log derivative acts as an unstable system.  If the value goes to some very negative number, then the derivative will become extremely small.  On the other hand if the value goes to some very large number, the derivative will become extremely large.  These issues are known as the problems of vanishing and exploding gradients respectively.
 
-The driving cause for exploding or vanishing gradient is that when the state transitions from one time step to another, it is multiplied by some matrix.  The chain rule causes this matrix to be multiplied by itself repeatedly in the derivative calculation which results in either exponential blow up or decay.  The only way to maintain a relatively constant value is for that matrix to be identity, which is exactly the idea behind the long short-term memory (LSTM) unit. \cite{sh97} The update equations for the original LSTM RNN are given by the following:
+The driving cause for exploding or vanishing gradients is that when the state vector transitions from one time step to another, it is multiplied by some matrix.  The chain rule causes this matrix to be multiplied by itself repeatedly in the derivative calculation which results in either exponential blow up or decay.  The only way to maintain a relatively constant value is for that matrix to be identity, which is exactly the idea behind the long short-term memory (LSTM) unit. \cite{sh97} The update equations for the original LSTM RNN are given by the following:
 \begin{align}\label{eq:lstm_start}
 i_k &= \sigma_i(W_ix_k + U_iR_{k-1} + b_i)\\
 o_k &= \sigma_o(W_ox_k + U_oR_{k-1} + b_o)\\
@@ -71,7 +71,7 @@ R_k &= \sigma_R(S_k) \circ o_k\label{eq:lstm_end}
 \end{align}
 Where $\circ$ represents Hadamard (entry-wise) multiplication.
 
-It is easy to see that these equations satisfy the update equations of a standard RNN, as defined.  The direct ``connection'' between $S_k$ and $S_{k-1}$ helps mitigate the issue of vanishing or exploding gradient.  It is important that $i_k$ and $c_k$ can have different signs so that the state is not stuck accumulating in one direction.  For this reason, $\sigma_i$ is usually $\tanh$ while $\sigma_o$ is usually the logistic function.
+It is easy to see that these equations satisfy the update equations of a standard RNN, as defined previously.  The direct ``connection'' between $S_k$ and $S_{k-1}$ helps mitigate the issue of vanishing or exploding gradient.  It is important that $i_k$ and $c_k$ can have different signs so that the state is not stuck accumulating in one direction.  For this reason, $\sigma_i$ is usually $\tanh$ while $\sigma_o$ is usually the logistic function.
 
 The model was later extended by \cite{fg00} with what they called a forget gate.  The forget gate, described by the new update equations \ref{eq:forget_1}-\ref{eq:forget_2}, allows the network to essentially discard information in the state and start again.
 \begin{align}
@@ -88,7 +88,7 @@ and so on.
 \subsection{Training RNN's}\label{sec:rnn_training}
 Recurrent neural networks are trained in much the same way that a standard neural network is trained with one key complication, the input is potentially unbounded.  This means that the number of computations is potentially unbounded and so there is no single graph representing the network.  To solve this issue in computing gradients, the neural network is \emph{unfolded} for some finite amount of time steps.  Any input which goes past the maximum time step is discarded in the computation.
 
-Dropout is a regularization method that can be used to avoid overfitting when training neural networks.  It as applicable to a wide range of neural net models, though its application to recurrent neural networks is slightly more complex.  Essentially, dropout randomly zeros out certain values in the neural net at every time step.  Dropout can be applied at the input, output, or internal state of an LSTM cell.  It was found that applying dropout to state variables led to poor performance, while applying dropout to the output of a cell led to increased performance. \cite{wz14} This type of RNN regularization simply means changing equation \ref{eq:lstm_end} to:
+Dropout is a regularization method that can be used to avoid overfitting when training neural networks.  It as applicable to a wide range of neural net models, though its application to recurrent neural networks is slightly more complex.  Essentially, dropout randomly zeros out certain values in the neural net at every time step.  Dropout can be applied at the input, output, or internal state of an LSTM cell.  It was found that applying dropout to state variables leads to poor performance, while applying dropout to the output of a cell leads to increased performance. \cite{wz14} This type of RNN regularization simply means changing equation \ref{eq:lstm_end} to:
 \begin{align}
 R_k &= D(\sigma_R(S_k) \circ o_k)
 \end{align}

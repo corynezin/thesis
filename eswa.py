@@ -8,6 +8,7 @@ import review_proc as rp
 import preprocess, rnn, word2vec, wa
 import plotutil as putil
 import argparse, os, sys, random, re
+import time
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
 word_embedding = np.load('index_to_vector.npy')
@@ -15,11 +16,13 @@ word_to_embedding_index = np.load('word_to_index.npy').item()
 
 m = word_to_embedding_index
 embedding_index_to_word = dict(zip(m.values(),m.keys()))
-
+t = []
+f = 0
 c = [0]*1024
 root_dir = './aclImdb/test/posneg/'
-g = tf.Graph()
 for file_name in os.listdir(root_dir):
+    g = tf.Graph()
+    t0 = time.clock()
     print('Running attack on: ' + file_name)
     rvo = rp.review(root_dir + file_name)
     rvo.translate(rvo.length, word_to_embedding_index, embedding_index_to_word)
@@ -38,8 +41,6 @@ for file_name in os.listdir(root_dir):
             restore_name = './ckpts/gridckpt_16_10/imdb-rnn-e15.ckpt'
             tf.train.Saver().restore(sess,restore_name)
             decision, probability, grad = r.infer_dpg(sess,rvo)
-    print(np.linalg.norm(grad[0][0,:,:],axis=1)
-    quit()
     window_size = 200
     hidden_size = 16
     restore_name = './ckpts/gridckpt_16_10/imdb-rnn-e15.ckpt'
@@ -63,6 +64,10 @@ for file_name in os.listdir(root_dir):
         if not val_found:
             R = R * 2
         m = (L + R) // 2 # m initialized as 1
+        if m >= args.size:
+            print('No derivation found, breaking...')
+            f = f + 1
+            break
         g = tf.Graph()
         ix = ii[:m+1]
         jx = jj[:m+1]
@@ -105,8 +110,14 @@ for file_name in os.listdir(root_dir):
                     print('Search complete, minimum value is: ',minm)
                     c[minm] += 1
                     break
+    t1 = time.clock()
+    print('Time taken',t1-t0)
+    t.append(t1-t0)
     np.save('./window_testing/ii/' + file_name[:-4] + '.npy',ii)
     np.save('./window_testing/jj/' + file_name[:-4] + '.npy',jj)
     np.save('./window_testing/pp/' + file_name[:-4] + '.npy',pp)
+    np.save('./wa_gray_testing/t/'+file_name[:-4] + '.npy',np.array(t))
+    np.save('./wa_gray_testing/c/'+file_name[:-4] + '.npy',np.array(c))
     if sum(c) % 50 == 0:
         print(c)
+        print(f)

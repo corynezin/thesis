@@ -1,12 +1,16 @@
 \label{sec:machine_learning}
-Machine learning is the general task of finding patterns given a set of data.  The methods by which these tasks are accomplished range from the simple linear regression to more complex neural networks.  Machine learning problems fall into primarily two categories: supervised learning and unsupervised learning.  
+Machine learning is the general task of finding patterns given a set of data.  The methods by which these tasks are accomplished range from the simple linear regression to more complex neural networks.  Machine learning problems fall into primarily two categories: supervised learning and unsupervised learning.  \cite{bishop}
 
-In the case of supervised learning, one is given a set of inputs, $\{x\}_{i=1}^N\in X$ and outputs, $\{y\}_{i=1}^N\in Y$ to some unknown function, $f$.  These sets are often referred to as ``features'' and ``labels'' respectively.  The goal is then to determine what that function is.  This is usually not feasible due the model for the function not being complex enough, or for being too complex.  These issues are known as underfitting and overfitting, respectively.  The objective is therefore simplified as finding the function, $g \in M$ where $M$ is some set of model functions, and where $g$ minimizes some loss function, $L(g,x,y)$.  That is:
+In the case of supervised learning, we are given a set of inputs, $\{x\}_{i=1}^N\in X$ and outputs, $\{y\}_{i=1}^N\in Y$ of some unknown function, $f$.  These sets are often referred to as ``features'' and ``labels'' respectively.  The goal is then to determine what that function is.  This is usually not feasible because the model for the function is either not complex enough, or is too complex.  These issues are known as underfitting and overfitting respectively.  The objective is therefore simplified to finding the function, $g \in M$ where $M$ is some set of model functions, and where $g$ minimizes some loss function, $L(g,x,y)$.  That is:
 \begin{align}
 \argmin_{g \in M} L(g,x,y)
 \end{align}
 
-One simple case of this is linear regression.  In linear regression, $M$ is the set of linear (or in most cases affine) functions mapping $X$ to $Y$. and the loss function is $L(g,x,y) = \frac{1}{N} \sum_{i=1}^N ||g(x_i)-y_i||^2$  It turns out that under these constraints, an exact solution can be found.  An illustration where $X=Y= \mathbb{R}$ is shown in figure \ref{fig:linear_regression}.
+The loss function penalizes mismatches between $g(x_i)$ and $y_i$ so that minimizing yields, conceptually, $g \approx f$.  One simple case of this is linear regression.  In linear regression, $M$ is the set of linear (or in most cases affine) functions that map $X$ to $Y$. and the loss function is given by:
+\begin{align}\label{eq:lin_loss}
+L(g,x,y) = \frac{1}{N} \sum_{i=1}^N ||g(x_i)-y_i||^2
+\end{align}
+It turns out that under these constraints, an exact solution can be found.  An illustration where $X=Y= \mathbb{R}$ is shown in Figure \ref{fig:linear_regression}.
 
 \begin{figure}
     \centering
@@ -15,36 +19,36 @@ One simple case of this is linear regression.  In linear regression, $M$ is the 
     \label{fig:linear_regression}
 \end{figure}
 
-In the case of unsupervised learning, one is given only some set of features, $\{x\}_{i=1}^N$ and asked to find some pattern in the data.  Finding a pattern can consist of finding clusters of data points which are ``close'' together by some measure, or finding some lower dimensional representation for the data, these are essentially problems of lossy compression.  Usually algorithms work by minimizing some loss function so that techniques can be borrowed from supervised learning, though these are not necessarily measures of the algorithm's success.  
+In the case of unsupervised learning, we are given only some set of features, $\{x\}_{i=1}^N$ and asked to find some pattern in the data.  Finding a patterm can consist of finding clusters of data points which are ``close'' together by some measure, or finding some lower dimensional representation for the data, these are essentially problems of lossy compression.  Usually algorithms work by minimizing some loss function so that techniques can be borrowed from supervised learning, though these are not necessarily measures of the algorithm's success.  
 
-One well known example of unsupervised learning is principal component analysis and its cousin singular value decomposition.  Given some features in the form of a matrix $X$, singular value decomposition can be used to find a matrix, $\hat{X}$ of rank $r < rank(X)$ such that $||X-\hat{X}||_F$ is minimized.  This has the effect of finding a lower dimensional representation of $X$ which contains as much information as possible and therefore tells us which dimensions are ``important.''  One example is shown in figure \ref{fig:svd_recover} uses singular value decomposition to remove noise from an assumed low rank matrix.  In figure \ref{fig:singval_good}, a plot shows the relative contribution of automatically detected signal components.  
+The well known examples of unsupervised learning are principal component analysis and its cousin singular value decomposition.  Given some features in the form of a matrix $X$, singular value decomposition finds a matrix, $\hat{X}$ of rank $r < rank(X)$ such that $||X-\hat{X}||_F$ is minimzed.  This has the effect of finding a lower dimensional representation of $X$ which contains as much information as possible and therefore tells us which dimensions are ``important.''  One example is shown in Figure \ref{fig:svd_recover}, which uses singular value decomposition to remove noise from an assumed low rank matrix.  In Figure \ref{fig:singval_good}, a plot shows the relative contribution of automatically detected signal components.  
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{svd_plots.png}
-    \caption{Illustration of using SVD to recover an underlying signal.  This is an example of unsupervised learning.}
+    \caption{Illustration of using SVD to recover an underlying signal.  This is an example of unsupervsied learning.}
     \label{fig:svd_recover}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{singval0.png}
-    \caption{Set of 25 singular value for the low rank matrix in figure \ref{fig:svd_recover}.  There are three distinct large values which tells us that the origin rank was very likely three.}
+    \caption{Set of 25 singular value for the low rank matrix in figure \ref{fig:svd_recover}.  There are hree distinct which tells us that the origin rank was very likely three.}
     \label{fig:singval_good}
 \end{figure}
 
 \subsection{Hyperparameters} \label{sec:hyperparameters}
 Hyperparameters are parameters of a function which do not change during the ``learning process'', that is, they are set by the user at the beginning, and the regular parameters of the function are determined with the hyperparameters held constant.  In the example of using singular value decomposition to denoise a low rank matrix, the hyperparameter would be the desired rank of the resulting matrix.  
 
-It can be seen from figure \ref{fig:singval_good} that this hyperparameter could be calculated, or at least guessed from the number of dominant singular values.  In most modern machine learning models, it is very difficult to efficiently determine optimal hyperparameters, often requiring a brute force search over several combinations.  This technique is known as grid search, which searches over $n$ hyperparameters on an $n$ dimensional grid and chooses the hyperparameters that minimize some loss function, not necessarily the same as the model's loss function.  The process of choosing optimal hyperparameters is known as hyperparameter tuning.
+It can be seen from Figure \ref{fig:singval_good} that this hyperparameter could be calculated, or at least guessed from the number of dominant singular values.  In most modern machine learning models, it is very difficult to efficiently determine optimal hyperparameters, often requiring a brute force search over several combinations.  This technique is known as grid search, which searches over $n$ hyperparameters on an $n$ dimensional grid and chooses the hyperparameters that minimize some loss function, not necessarily the same as the model's loss function.  The process of choosing optimal hyperparameters is known as hyperparameter tuning.
 
 \subsection{Overfitting} \label{sec:overfitting}
 If one allows the model, or set of permissible functions, to be more complex, one may represent more complicated functions.  Figure \ref{fig:poly_reg} shows an example of both a quadratic fit and a $20^{th}$ order polynomial fit to data points with a more complicated pattern.  These two images represent the issue of overfitting: while the underlying curve is in fact quadratic, the higher order polynomial achieves a lower error.  It is often true, especially in simpler cases, that increasing the model complexity will reduce the value of the loss function.  However if the goal is to determine the actual underlying pattern of the data, one may want to choose something simpler at the cost of a worse loss value.
 
-Regularization is the technique of introducing information to a machine learning problem to reduce overfitting.  One of the most common forms of regularization is called Tikhanov regularization.  It is also known by the names of ridge regression in statistics and weight decay in machine learning.  In linear regression, Tikhanov regularization penalizes a function according to the magnitude squared of each coefficient.  By the Riesz representation theorem, for any linear function, $f: \mathbb{R}^m \rightarrow \mathbb{R}$, $\exists v\in\mathbb{R}^m \text{ s.t. } f(x) = \langle x,v\rangle $ for some vector $v\in \mathbb{R}^m$.  Suppose $v$ is the vector corresponding to linear function $g$ in this manner, then for linear regression the new loss function is given in equation \ref{eq:tik}
+Regularization is the technique of introducing information to a machine learning problem to reduce overfitting.  One of the most common forms of regularization is called Tikhanov regularization. \cite{tikhanov} It is also known by the names of ridge regression in statistics and weight decay in machine learning.  In linear regression, Tikhanov regularization penalizes a function according to the magnitude squared of each coefficient.  This can be applied to any linear transform as follows.  By the Riesz representation theorem, for any real-valued linear function, $g: \mathbb{R}^m \rightarrow \mathbb{R}$, there exists a vector $v\in\mathbb{R}^m \text{ such that } g(x) = \langle x,v\rangle $.  Suppose $v_g$ is the vector corresponding to linear function $g$ in this manner, then for linear regression the loss function in equation \ref{eq:lin_loss} can be modified as:
 \begin{align}\label{eq:tik}
-L(g,x,y) = \lambda ||v||_2^2 + \frac{1}{N}\sum_{i=1}^N ||g(x_i)-y_i||^2
+L(g,x,y) = \lambda ||v_g||_2^2 + \frac{1}{N}\sum_{i=1}^N ||g(x_i)-y_i||^2
 \end{align}
-where $\lambda$ is a real scalar hyperparameter that may be tuned in the manner discussed in section \ref{sec:overfitting}.  While there is no efficient method for computing the optimal value for $\lambda$ in general, it has a simple value given a certain assumption.  If one assumes a Gaussian distribution with 0-mean and $\lambda^{-1}$ variance for the prior distribution of the vector $v$, then the result of the maximum a posteriori (MAP) estimation is the same as the solution to equation \ref{eq:tik}.
+where $\lambda$ is a real scalar hyperparameter that may be tuned with grid search, for example.  The hyperparameter $\lambda$ achieves a tradeoff between matching the data and reducing the size of the coefficients in the function $g$.  While there is no efficient method for computing the optimal value for $\lambda$ in general, it has a simple value given a certain assumption.  If one assumes a Gaussian distribution with 0-mean and $\lambda^{-1}$ variance for the prior distribution of the vector $v$, then the result of the maximum a posteriori (MAP) estimation minimizes equation \ref{eq:tik}.
 
 \begin{figure}
     \centering
@@ -54,6 +58,6 @@ where $\lambda$ is a real scalar hyperparameter that may be tuned in the manner 
 \end{figure}
 
 \subsection{Training, Validation, and Testing}
-Using the loss function over all data points is not a suitable measure of the success of a machine learning algorithm.  As discussed in section \ref{sec:overfitting}, models which fit the underlying function worse may easily achieve a better overall loss.  In fact for any finite data set that could feasible represent a function, it is easy to find a function in the form of a hash table that can exactly represent the mapping of inputs to outputs.  Of course, this hash table would not ``generalize'' to other data points and wouldn't represent the underlying function in a meaningful way.  
+Using the loss function over all data points is not a suitable measure of the success of a machine learning algorithm.  As discussed in section \ref{sec:overfitting}, models which fit the underlying function worse may easily achieve a better overall loss.  In fact for any finite data set that could feasibly represent a function, it is easy to find a function in the form of a hash table that can exactly represent the mapping of inputs to outputs.  Of course, this hash table would not ``generalize'' to other data points and would not represent the underlying function in a meaningful way.  
 
 To help obtain a true measure of success, it is standard to separate the data into three parts: training, validation, and testing.  Essentially, training is used to tune regular parameters, validation is used to tune hyperparameters (e.g. with grid search), and testing is used only to evaluate the effectiveness of the algorithm.  If a model function is guilty of overfitting, it will be revealed by a low training loss and a high testing loss.  Measuring the validation loss over time can also be used for a simple form of regularization called \textit{early stopping}.  In early stopping, training is stopped when the validation loss begins to increase.  Of course validation loss may be noisy so usually the loss over time is smoothed and a human hand picks the time to stop.

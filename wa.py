@@ -52,6 +52,47 @@ def win_atk(rv, window_size, word_embedding, hidden_size, restore_name):
     pp = np.array(pp)
     return(ii,jj,pp)
 
+def win_atk_multi(rv, window_size, word_embedding, hidden_size, restore_name):
+    window_size = min(window_size,rv.length)
+    g = tf.Graph()
+    pp = []
+    with g.as_default():
+        global_step_tensor = tf.Variable(0,trainable=False,name='global_step')
+        r = rnn.classifier(
+            batch_size = 10000,
+            learning_rate = 0.0,
+            hidden_size = hidden_size, 
+            max_time = window_size,
+            embeddings = word_embedding,
+            global_step = global_step_tensor)
+
+        with tf.Session() as sess:
+            tf.train.Saver().restore(sess,restore_name)
+            print('Running window attack...')
+            #ii = [0]*rv.length
+            ii = np.zeros((10000,rv.length))
+            #jj = [0]*rv.length
+            jj = np.zeros((10000,rv.length))
+            for i in range(rv.length):
+                d,p,g = r.infer_window(sess,rv,i,window_size)
+                rnn_sent = 'pos' if not d[rv.index_vector[0,0]] else 'neg'
+                if rnn_sent != rv.sentiment:
+                    print('RNN sentiment: ',rnn_sent,'Review sentiment: ',rv.sentiment)
+                    print('Neural Net was wrong')
+                    return None,None,None
+                p = p[:,0]
+                if rv.sentiment == 'pos':
+                    ii[:,i] = np.argsort(p)
+                    pp.append( np.amin(p,axis=0) )
+                else:
+                    ii[:,i] = np.flip(np.argsort(p),axis=0)
+                    pp.append( np.amax(p,axis=0) )
+                jj[i] = i
+    ii = np.array(ii)
+    jj = np.array(jj)
+    pp = np.array(pp)
+    return(ii,jj,pp)
+
 def gaws(rv, window_size, word_embedding, hidden_size, restore_name,grad,k,d):
     rnn_sentiment = 'pos' if not d[0] else 'neg'
     args = np.argsort(grad) #sorted from smallest to largest

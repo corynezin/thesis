@@ -199,6 +199,27 @@ class classifier:
                 })
         return d,p,g
 
+    def infer_multi(self,sess,rv,ii,K):
+        # K is the list of source word indices to be replaced
+        # batch size is fixed at 10,000 with number of
+        # destination words = 10,000 / len(K)
+        N = self.batch_size // K.size
+        index_matrix = np.tile(rv.index_vector[0,:],(self.batch_size,1))
+        c = 0
+        for k in list(K):
+            index_matrix[c*N:(c+1)*N,k] = ii[np.arange(N),k]
+            c = c + 1
+        target_matrix = np.tile(rv.targets,(self.batch_size,1))
+
+        d,p,g = sess.run( [self.decision, self.probability, self.pos_grad],
+            feed_dict = \
+                {
+                  self.inputs: index_matrix,
+                  self.targets: target_matrix,
+                  self.sequence_length: [rv.length] * self.batch_size,
+                  self.keep_prob: 1.0
+                })
+        return d,p,g
 
 
 

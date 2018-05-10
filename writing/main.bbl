@@ -21,6 +21,57 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{ab15}
+\BIBentryALTinterwordspacing
+A.~G. Baydin, B.~A. Pearlmutter, and A.~A. Radul, ``Automatic differentiation
+  in machine learning: a survey,'' \emph{CoRR}, vol. abs/1502.05767, 2015.
+  [Online]. Available: \url{http://arxiv.org/abs/1502.05767}
+\BIBentrySTDinterwordspacing
+
+\bibitem{jj17}
+J.~James, ``Data never sleep 5.0,''
+  \url{https://www.domo.com/blog/data-never-sleeps-5/}, 2017.
+
+\bibitem{mr16}
+M.~Robinson, ``How many stories do newspapers publish per day?''
+  \url{www.theatlantic.com/technology/archive/2016/05/how-many-stories-do-newspapers-publish-per-day/483845/},
+  2016.
+
+\bibitem{bl02}
+B.~Livingston, ``Paul graham provides stunning answer to spam e-mails,''
+  \url{https://www.infoworld.com/article/2674702/technology-business/techology-business-paul-graham-provides-stunning-answer-to-spam-e-mails.html},
+  2002.
+
+\bibitem{nr17}
+\BIBentryALTinterwordspacing
+N.~Ruchansky, S.~Seo, and Y.~Liu, ``{CSI:} {A} hybrid deep model for fake
+  news,'' \emph{CoRR}, vol. abs/1703.06959, 2017. [Online]. Available:
+  \url{http://arxiv.org/abs/1703.06959}
+\BIBentrySTDinterwordspacing
+
+\bibitem{cs14}
+C.~{Szegedy}, W.~{Zaremba}, I.~{Sutskever}, J.~{Bruna}, D.~{Erhan},
+  I.~{Goodfellow}, and R.~{Fergus}, ``{Intriguing properties of neural
+  networks},'' \emph{ArXiv e-prints}, Dec. 2013.
+
+\bibitem{np16}
+N.~{Papernot}, P.~{McDaniel}, A.~{Swami}, and R.~{Harang}, ``{Crafting
+  Adversarial Input Sequences for Recurrent Neural Networks},'' \emph{ArXiv
+  e-prints}, Apr. 2016.
+
+\bibitem{bishop}
+C.~M. Bishop, \emph{Pattern Recognition and Machine Learning (Information
+  Science and Statistics)}.\hskip 1em plus 0.5em minus 0.4em\relax Berlin,
+  Heidelberg: Springer-Verlag, 2006.
+
+\bibitem{tikhanov}
+\BIBentryALTinterwordspacing
+G.~H. Golub, P.~C. Hansen, and D.~P. O'Leary, ``Tikhonov regularization and
+  total least squares,'' \emph{SIAM J. Matrix Anal. Appl.}, vol.~21, no.~1, pp.
+  185--194, Oct. 1999. [Online]. Available:
+  \url{http://dx.doi.org/10.1137/S0895479897326432}
+\BIBentrySTDinterwordspacing
+
 \bibitem{gc89}
 G.~{Cybenko}, ``{Approximation by superpositions of a sigmoidal fucntion},''
   \emph{Mathematics of control, signals and systems}, vol.~2, no.~4, pp.
@@ -31,13 +82,6 @@ G.~{Cybenko}, ``{Approximation by superpositions of a sigmoidal fucntion},''
 D.~P. Kingma and J.~Ba, ``Adam: {A} method for stochastic optimization,''
   \emph{CoRR}, vol. abs/1412.6980, 2014. [Online]. Available:
   \url{http://arxiv.org/abs/1412.6980}
-\BIBentrySTDinterwordspacing
-
-\bibitem{ab15}
-\BIBentryALTinterwordspacing
-A.~G. Baydin, B.~A. Pearlmutter, and A.~A. Radul, ``Automatic differentiation
-  in machine learning: a survey,'' \emph{CoRR}, vol. abs/1502.05767, 2015.
-  [Online]. Available: \url{http://arxiv.org/abs/1502.05767}
 \BIBentrySTDinterwordspacing
 
 \bibitem{je90}
@@ -64,6 +108,13 @@ F.~A. Gers and J.~Schmidhuber, ``Learning to forget: Continual prediction with
 \bibitem{fg00_2}
 ------, ``Recurrent nets that time and count,'' Tech. Rep., 2000.
 
+\bibitem{wz14}
+\BIBentryALTinterwordspacing
+W.~Zaremba, I.~Sutskever, and O.~Vinyals, ``Recurrent neural network
+  regularization,'' \emph{CoRR}, vol. abs/1409.2329, 2014. [Online]. Available:
+  \url{http://arxiv.org/abs/1409.2329}
+\BIBentrySTDinterwordspacing
+
 \bibitem{cm08}
 C.~D. Manning, P.~Raghavan, and H.~Sch\"{u}tze, \emph{Introduction to
   Information Retrieval}.\hskip 1em plus 0.5em minus 0.4em\relax New York, NY,
@@ -87,10 +138,19 @@ M.~{Gutmann} and A.~{Hyvärinen}, ``{Noise-contrastive estimation of
   statistics},'' \emph{The Journal of Machine Learning Research}, vol.~13, pp.
   307--361, 2012.
 
-\bibitem{cs14}
-C.~{Szegedy}, W.~{Zaremba}, I.~{Sutskever}, J.~{Bruna}, D.~{Erhan},
-  I.~{Goodfellow}, and R.~{Fergus}, ``{Intriguing properties of neural
-  networks},'' \emph{ArXiv e-prints}, Dec. 2013.
+\bibitem{ma16}
+\BIBentryALTinterwordspacing
+M.~Abadi, A.~Agarwal, P.~Barham, E.~Brevdo, Z.~Chen, C.~Citro, G.~S. Corrado,
+  A.~Davis, J.~Dean, M.~Devin, S.~Ghemawat, I.~J. Goodfellow, A.~Harp,
+  G.~Irving, M.~Isard, Y.~Jia, R.~J{\'{o}}zefowicz, L.~Kaiser, M.~Kudlur,
+  J.~Levenberg, D.~Man{\'{e}}, R.~Monga, S.~Moore, D.~G. Murray, C.~Olah,
+  M.~Schuster, J.~Shlens, B.~Steiner, I.~Sutskever, K.~Talwar, P.~A. Tucker,
+  V.~Vanhoucke, V.~Vasudevan, F.~B. Vi{\'{e}}gas, O.~Vinyals, P.~Warden,
+  M.~Wattenberg, M.~Wicke, Y.~Yu, and X.~Zheng, ``Tensorflow: Large-scale
+  machine learning on heterogeneous distributed systems,'' \emph{CoRR}, vol.
+  abs/1603.04467, 2016. [Online]. Available:
+  \url{http://arxiv.org/abs/1603.04467}
+\BIBentrySTDinterwordspacing
 
 \bibitem{am11}
 \BIBentryALTinterwordspacing

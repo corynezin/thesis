@@ -1,46 +1,57 @@
 \relax 
 \citation{cs14}
-\@writefile{toc}{\contentsline {chapter}{\numberline {2}Problem Statement}{31}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Adversarial Derivations}{34}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {2.1}Adversarial Examples}{31}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}Word Embeddings}{33}}
-\newlabel{sec:word_embeddings}{{2.2}{33}}
-\citation{tm13}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Adversarial Text Derivation}{34}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Adversarial Examples}{34}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Word Embeddings}{37}}
+\newlabel{sec:word_embeddings}{{3.2}{37}}
+\citation{np16}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Adversarial Text Derivation}{38}}
+\newlabel{sec:adversarial_text_derivation}{{3.3}{38}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Fast Gradient Sign Method}{39}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Fast Gradient Sign Method\relax }}{39}}
+\newlabel{alg:fgsm}{{2}{39}}
+\citation{ma16}
 \citation{am11}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Preliminary Results}{36}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Preliminary Results}{40}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Word Embedding Training}{36}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Word embedding hyperparameters\relax }}{36}}
-\newlabel{tab:embedding_hperparameters}{{3.1}{36}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Preprocessing algorithm\relax }}{36}}
-\newlabel{tab:preproc}{{3.2}{36}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces Some examples of nearest neighbors in embedding space\relax }}{37}}
-\newlabel{tab:nearest_words}{{3.3}{37}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}RNN Training}{37}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces Training Accuracy\relax }}{38}}
-\newlabel{tab:train_accuracy}{{3.4}{38}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces Testing Accuracy\relax }}{38}}
-\newlabel{tab:test_accuracy}{{3.5}{38}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Stochastic Gradient Analysis}{38}}
-\newlabel{sec:stochastic_gradient_analysis}{{3.3}{38}}
-\newlabel{approx}{{3.5}{39}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Predicted difference in prediction confidence vs. actual difference for sample file 9999\_10.txt\relax }}{40}}
-\newlabel{fig:dvhat}{{3.1}{40}}
-\newlabel{fig:total_color}{{3.2a}{41}}
-\newlabel{sub@fig:total_color}{{a}{41}}
-\newlabel{fig:norm_color}{{3.2b}{41}}
-\newlabel{sub@fig:norm_color}{{b}{41}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces The predicted change in classifier confidence vs. the actual change. Only the most common 1,000 words are considered in replacement for this example. The words are listed in the legend in order of decreasing value.\relax }}{41}}
-\newlabel{fig:outliers}{{3.2}{41}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Word Embedding Training}{40}}
+\newlabel{sec:word_emb_results}{{4.1}{40}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Word embedding hyperparameters.\relax }}{40}}
+\newlabel{tab:embedding_hperparameters}{{4.1}{40}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Preprocessing Algorithm\relax }}{41}}
+\newlabel{tab:preproc}{{4.2}{41}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Some examples of nearest neighbors in embedding space. UNK is a symbol for a word that is not in the vocabulary.\relax }}{41}}
+\newlabel{tab:nearest_words}{{4.3}{41}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces Training Accuracy\relax }}{42}}
+\newlabel{tab:train_accuracy}{{4.4}{42}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}RNN Training}{42}}
+\newlabel{sec:rnn_results}{{4.2}{42}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.5}{\ignorespaces Testing Accuracy\relax }}{43}}
+\newlabel{tab:test_accuracy}{{4.5}{43}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Training Accuracy of RNNs\relax }}{43}}
+\newlabel{fig:test_curve}{{4.1}{43}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Testing Accuracy of RNNs\relax }}{44}}
+\newlabel{fig:train_curve}{{4.2}{44}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Stochastic Gradient Analysis}{45}}
+\newlabel{sec:stochastic_gradient_analysis}{{4.3}{45}}
+\newlabel{approx}{{4.5}{45}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Different measures of word sentiment/importance\relax }}{46}}
+\newlabel{fig:saliency}{{4.3}{46}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Predicted difference in prediction confidence vs. actual difference for sample file 9999\_10.txt\relax }}{47}}
+\newlabel{fig:dvhat}{{4.4}{47}}
+\newlabel{fig:total_color}{{4.5a}{48}}
+\newlabel{sub@fig:total_color}{{a}{48}}
+\newlabel{fig:norm_color}{{4.5b}{48}}
+\newlabel{sub@fig:norm_color}{{b}{48}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces The predicted change in classifier confidence vs. the actual change. Only the most common 1,000 words are considered in replacement for this example. The words are listed in the legend in order of decreasing value.\relax }}{48}}
+\newlabel{fig:outliers}{{4.5}{48}}
 \citation{pm07}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Different measures of word sentiment/importance\relax }}{43}}
-\newlabel{fig:saliency}{{3.3}{43}}
 \@setckpt{problem}{
-\setcounter{page}{44}
-\setcounter{equation}{16}
+\setcounter{page}{51}
+\setcounter{equation}{17}
 \setcounter{enumi}{3}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
@@ -48,21 +59,21 @@
 \setcounter{footnote}{0}
 \setcounter{mpfootnote}{0}
 \setcounter{part}{0}
-\setcounter{chapter}{3}
+\setcounter{chapter}{4}
 \setcounter{section}{3}
 \setcounter{subsection}{0}
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{3}
+\setcounter{figure}{5}
 \setcounter{table}{5}
 \setcounter{parentequation}{0}
 \setcounter{ContinuedFloat}{0}
-\setcounter{subfigure}{0}
+\setcounter{subfigure}{2}
 \setcounter{subtable}{0}
 \setcounter{float@type}{8}
-\setcounter{algorithm}{1}
-\setcounter{ALG@line}{12}
+\setcounter{algorithm}{2}
+\setcounter{ALG@line}{7}
 \setcounter{ALG@rem}{0}
 \setcounter{ALG@nested}{0}
 \setcounter{ALG@Lnr}{2}

@@ -3,11 +3,11 @@ In order to find suitable choices for word substitution, the window search and G
 
 
 \section{White Box}
-Here we assume that all details of the model are known including the exact weights.  We determine candidate word replacements based on inferring with those weights directly.  These are the conditions under which the results in \cite{np16} where achieved.  The graph in figure \ref{fig:whitepmf} shows the percentage of time a given number of words were required to change a classification.  The graph in figure \ref{fig:whitecdf} shows the accumulation of the previously mentioned graph.  These graphs can be interpreted as a probability mass function and a cumulative distribution function respectively.  Table \ref{tab:whitesum} gives some summary statistics of the results.
+This experiment assumes that all details of the model are known including the exact weights.  We determine candidate word replacements based on inferring with those weights directly.  These are the conditions under which the results in \cite{np16} where achieved.  The graph in figure \ref{fig:whitepmf} shows the percentage of time a given number of words were required to change a classification.  The graph in figure \ref{fig:whitecdf} shows the accumulation of the previously mentioned graph.  These graphs can be interpreted as a probability mass function and a cumulative distribution function respectively.  Table \ref{tab:whitesum} gives some summary statistics of the results.
 
 Figure \ref{fig:whitepmf} shows shows that multi-word window search finds a single word replacement to change the classification about $70\%$ of the time which is consistent with our findings for the single-word window search algorithm.  Figure \ref{fig:whitecdf} shows that GAWS lags behind a fair amount, on average requiring about double the number of word replacements up until 11 word replacements where 100\% of can be misclassified.  
 
-Overall the methods significantly outperform FGSM.  From Table \ref{tab:whitesum} we see that FGSM performed significantly worse in terms of average substitutions required as compared to \cite{np16}.  This is likely explained by the fact that we included the entire data set which yields a much longer average sample length: $228.49$ words per sample compared to $71.06$.  This ratio of our average to theirs roughly matches the increase in substitutions required.  Figure \ref{fig:whitetime} shows that GAWS can complete searches in far less time than window search.  This applies in both a mean sense and an extreme sense: the longest time GAWS took was 50 seconds while WS took almost 6 minutes on one occasion.
+Overall the methods significantly outperform FGSM.  From Table \ref{tab:whitesum}, it is clear that FGSM performed significantly worse in terms of average substitutions required as compared to \cite{np16}.  This is likely explained by the fact the entire data set was included which yields a much longer average sample length: $228.49$ words per sample compared to $71.06$.  This ratio of our average to theirs roughly matches the increase in substitutions required.  Figure \ref{fig:whitetime} shows that GAWS can complete searches in far less time than window search.  This applies in both a mean sense and an extreme sense: the longest time GAWS took was 50 seconds while WS took almost 6 minutes on one occasion.
 
 \begin{table}
 \centering
@@ -42,7 +42,7 @@ WS & 1.81 & 2 & 1 & 0\\ \hline
 \end{figure}
 
 \section{Gray Box}
-Here we assume that all hyperparameters of the model being attacked are known.  In order to attack the model, we train a second neural network with identical hyperparameters.  Because stochastic gradient descent has random components, the models will likely have very different weights by the end of training.  We infer and search on our stand-in model and then infer on the model under attack to check if we successfully caused it to misclassify.  If the model under attack misclassifies the text sample to begin with, we do not consider it.
+This experiment assumes that all hyperparameters of the model being attacked are known.  In order to attack the model, we trained a second neural network with identical hyperparameters.  Because stochastic gradient descent has random components, the models will likely have very different weights by the end of training.  We infer and search on our stand-in model and then infer on the model under attack to check if it was successfully caused to misclassify the sample.  If the model under attack misclassifies the text sample to begin with, it is not considered.
 
 \begin{table}
 \centering
@@ -74,7 +74,7 @@ Table \ref{tab:graysum} shows that performance of the algorithms is significantl
 Both Table \ref{tab:graysum} and figure \ref{fig:graypmf} show, however, that most of the samples can be successfully attacked by changing just two or three words.  These results indicate that the described algorithms do not exactly attack just one model with one set of weights, but exhibit some amount of transferability.  Figure \ref{fig:graycdf} shows that window search consistently outperforms GAWS in terms of the number of replacements required.  The shape of the WS and GAWS sequences in \ref{fig:graypmf} appear to be roughly exponential toward the start and flatten out further away.  As in the white box scenario, FGSM seems to have a fairly constant distribution and therefore linear cumulative distribution.
 
 \section{Black Box}
-Here we assume that no details of the model are known, in particular the hyperparameters are unknown.  In order to evaluate performance under this condition, we determine word substitutions using an RNN with a hidden layer of size 16 and attack an RNN with a hidden layer size of 8.
+This experiment assumes that no details of the model are known, in particular the hyperparameters are unknown.  In order to evaluate performance under this condition, we determine word substitutions using an RNN with a hidden layer of size 16 and attack an RNN with a hidden layer size of 8.
 \begin{table}
 \centering
 \begin{tabular}{ |c|c|c|c|c| } \hline

@@ -1,0 +1,26 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Linear regression for a noisy line. A blue dot represents the position of a feature/label pair. The yellow line represents the approximate affine approximation function.\relax }}{5}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Illustration of using SVD to recover an underlying signal. This is an example of unsupervsied learning.\relax }}{6}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Set of 25 singular value for the low rank matrix in figure 2.2\hbox {}. There are hree distinct which tells us that the origin rank was very likely three.\relax }}{7}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces The figure on the left is the result of an optimization constrained to second order polynomials while the figure on the right is the result of a $20^{th}$ order constraint. The second order constraint achieves a result closer to the underlying curve.\relax }}{9}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Frequency response for several moving average exponential filters. Lower lines are associated with lower values of $\beta $.\relax }}{17}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Graph reproduced from \cite {ab15}. Each node represents a function of the incoming nodes.\relax }}{19}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Training Accuracy of RNNs\relax }}{43}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Testing Accuracy of RNNs\relax }}{44}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Different measures of word sentiment/importance\relax }}{46}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Predicted difference in prediction confidence vs. actual difference for sample file 9999\_10.txt\relax }}{47}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces The predicted change in classifier confidence vs. the actual change. Only the most common 1,000 words are considered in replacement for this example. The words are listed in the legend in order of decreasing value.\relax }}{48}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces The x-axis represents the number of word substitutions used to change the fraction of samples represented by the y-axis.\relax }}{63}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces The y-axis represents the total fraction of samples can be successfully misclassified given the number of substitutions on the x-axis. This is the accumulation of the graph in figure 6.1\hbox {}\relax }}{63}
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Time taken per sample for WS and GAWS algorithms.\relax }}{64}
+\contentsline {figure}{\numberline {6.4}{\ignorespaces The x-axis represents the number of word substitutions used to change the fraction of samples represented by the y-axis.\relax }}{65}
+\contentsline {figure}{\numberline {6.5}{\ignorespaces The y-axis represents the total fraction of samples can be successfully misclassified given the number of substitutions on the x-axis. This is the accumulation of the graph in figure 6.4\hbox {}\relax }}{66}
+\contentsline {figure}{\numberline {6.6}{\ignorespaces The y-axis represents the fraction of samples which were misclassified given the number of substitutions on the x-axis.\relax }}{67}
+\contentsline {figure}{\numberline {6.7}{\ignorespaces The y-axis represents the total fraction of samples can be successfully misclassified given the number of substitutions on the x-axis. This is the accumulation of the graph in figure 6.6\hbox {}\relax }}{68}
+\addvspace {10\p@ }
+\addvspace {10\p@ }

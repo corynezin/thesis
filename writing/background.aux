@@ -1,108 +1,115 @@
 \relax 
-\@writefile{toc}{\contentsline {chapter}{\numberline {1}Background}{3}}
+\citation{bishop}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Machine Learning for Text}{4}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {1.1}Machine Learning}{3}}
-\newlabel{chap:machine_learning}{{1.1}{3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Linear regression for a noisy line. A blue dot represents the position of a feature/label pair. The yellow line represents the approximate affine approximation function.\relax }}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Machine Learning}{4}}
+\newlabel{sec:machine_learning}{{2.1}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Linear regression for a noisy line. A blue dot represents the position of a feature/label pair. The yellow line represents the approximate affine approximation function.\relax }}{5}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:linear_regression}{{1.1}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces Illustration of using SVD to recover an underlying signal. This is an example of unsupervsied learning.\relax }}{5}}
-\newlabel{fig:svd_recover}{{1.2}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}Hyperparameters}{5}}
-\newlabel{sec:hyperparameters}{{1.1.1}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces Set of 25 singular value for the low rank matrix with noise in figure 1.2\hbox {}. Each column of the original matrix has a mean of about 0.5. Each singular value is a measure of some signal component present in the matrix.\relax }}{6}}
-\newlabel{fig:singular_values}{{1.3}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.4}{\ignorespaces Set of 25 singular value for a low rank matrix, each column of the original matrix has mean 0. Here we see three distinct which tells us that the origin rank was very likely three.\relax }}{6}}
-\newlabel{fig:singval_good}{{1.4}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}Overfitting}{7}}
-\newlabel{sec:overfitting}{{1.1.2}{7}}
-\newlabel{eq:tik}{{1.2}{7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.5}{\ignorespaces The figure on the left is the result of an optimization constrained to second order polynomials while the figure on the right is the result of a $20^{th}$ order constraint. The second order constraint achieves a result closer to the underlying curve.\relax }}{8}}
-\newlabel{fig:poly_reg}{{1.5}{8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.3}Training, Validation, and Testing}{8}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.2}Neural Networks}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}Multilayer Perceptron}{9}}
-\newlabel{eq:mlp}{{1.3}{9}}
+\newlabel{fig:linear_regression}{{2.1}{5}}
+\newlabel{eq:lin_loss}{{2.2}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Illustration of using SVD to recover an underlying signal. This is an example of unsupervsied learning.\relax }}{6}}
+\newlabel{fig:svd_recover}{{2.2}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Hyperparameters}{6}}
+\newlabel{sec:hyperparameters}{{2.1.1}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Set of 25 singular value for the low rank matrix in figure 2.2\hbox {}. There are hree distinct which tells us that the origin rank was very likely three.\relax }}{7}}
+\newlabel{fig:singval_good}{{2.3}{7}}
+\citation{tikhanov}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Overfitting}{8}}
+\newlabel{sec:overfitting}{{2.1.2}{8}}
+\newlabel{eq:tik}{{2.3}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces The figure on the left is the result of an optimization constrained to second order polynomials while the figure on the right is the result of a $20^{th}$ order constraint. The second order constraint achieves a result closer to the underlying curve.\relax }}{9}}
+\newlabel{fig:poly_reg}{{2.4}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}Training, Validation, and Testing}{9}}
+\citation{bishop}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Neural Networks}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Multilayer Perceptron}{10}}
+\newlabel{eq:mlp}{{2.4}{10}}
 \citation{gc89}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Universal Approximation Theorem}{11}}
 \citation{gc89}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}Universal Approximation Theorem}{10}}
-\newlabel{eq:linf}{{1.7}{10}}
-\newlabel{eq:l1}{{1.8}{10}}
-\newlabel{eq:l2}{{1.9}{10}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Training Algorithms}{11}}
-\newlabel{sec:training}{{1.3}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}Newton's Method}{11}}
-\newlabel{eq:newton}{{1.11}{12}}
-\newlabel{eq:newtons}{{1.12}{12}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}Stochastic Gradient Descent}{12}}
-\newlabel{sec:sgd}{{1.3.2}{12}}
-\newlabel{eq:sgd}{{1.14}{13}}
+\newlabel{eq:linf}{{2.11}{12}}
+\newlabel{eq:l1}{{2.12}{12}}
+\newlabel{eq:l2}{{2.13}{12}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Training Algorithms}{13}}
+\newlabel{sec:training}{{2.3}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Newton's Method}{13}}
+\newlabel{eq:newton}{{2.15}{14}}
+\newlabel{eq:newtons}{{2.16}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Stochastic Gradient Descent}{14}}
+\newlabel{sec:sgd}{{2.3.2}{14}}
+\newlabel{eq:sgd}{{2.18}{15}}
 \citation{pd14}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.3}Adam Optimizer}{14}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces \textit  {Adam Optimizer}. $(A\circ B)_{ij} = A_{ij}\times B_{ij}$ is the hadamard product of $A$ and $B$. $(A \oslash B)_{ij} = A_{ij}/B_{ij}$ is Hadamard division. The hyperparameter $\alpha $ is similar to the learning rate, $\eta $ in SGD. $\beta _1$ and $\beta _2$ are filter coefficients representing smoothing amount. The value $\epsilon $ is an arbitrary small number to avoid division by $0$.\relax }}{15}}
-\newlabel{alg:adam}{{1}{15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.4}Automatic Differentiation}{15}}
-\newlabel{sec:autodiff}{{1.3.4}{15}}
-\newlabel{eq:autodiff}{{1.16}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Adam Optimizer}{16}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces \textit  {Adam Optimizer}. $(A\circ B)_{ij} = A_{ij}\times B_{ij}$ is the Hadamard product of $A$ and $B$. $(A \oslash B)_{ij} = A_{ij}/B_{ij}$ is Hadamard division. The hyperparameter $\alpha $ is similar to the learning rate, $\eta $ in SGD. $\beta _1$ and $\beta _2$ are filter coefficients representing smoothing amount. The value $\epsilon $ is an arbitrary small number to avoid division by $0$.\relax }}{17}}
+\newlabel{alg:adam}{{1}{17}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Frequency response for several moving average exponential filters. Lower lines are associated with lower values of $\beta $.\relax }}{17}}
+\newlabel{fig:freqz}{{2.5}{17}}
 \citation{ab15}
 \citation{ab15}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.6}{\ignorespaces Frequency response for several moving average exponential filters. Lower lines are associated with lower values of $\beta $.\relax }}{16}}
-\newlabel{fig:freqz}{{1.6}{16}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.4}Recurrent Neural Networks}{16}}
-\newlabel{sec:rnn}{{1.4}{16}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.7}{\ignorespaces Graph reproduced from \cite  {ab15}. Each node represents a function of the incoming nodes.\relax }}{17}}
-\newlabel{fig:graph}{{1.7}{17}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.1}Overview}{17}}
-\newlabel{eq:rnn_st_start}{{1.18}{18}}
-\newlabel{eq:rnn_st_end}{{1.21}{18}}
-\newlabel{eq:rnn_out_start}{{1.22}{18}}
-\newlabel{eq:rnn_out_end}{{1.25}{18}}
+\citation{ab15}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Automatic Differentiation}{18}}
+\newlabel{sec:autodiff}{{2.3.4}{18}}
+\newlabel{eq:autodiff}{{2.20}{18}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Recurrent Neural Networks}{18}}
+\newlabel{sec:rnn}{{2.4}{18}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Graph reproduced from \cite  {ab15}. Each node represents a function of the incoming nodes.\relax }}{19}}
+\newlabel{fig:graph}{{2.6}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Overview}{19}}
+\newlabel{eq:rnn_st_start}{{2.22}{20}}
+\newlabel{eq:rnn_st_end}{{2.25}{20}}
+\newlabel{eq:rnn_out_start}{{2.26}{20}}
+\newlabel{eq:rnn_out_end}{{2.29}{20}}
 \citation{je90}
 \citation{mj86}
 \citation{hs91}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.2}Early Networks}{19}}
-\newlabel{eq:elman_s}{{1.26}{19}}
-\newlabel{eq:elman_y}{{1.27}{19}}
-\newlabel{eq:newj_s}{{1.28}{19}}
-\newlabel{eq:newj_y}{{1.29}{19}}
-\newlabel{eq:jordan_s}{{1.30}{19}}
-\newlabel{eq:jordan_y}{{1.31}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Early Networks}{21}}
+\newlabel{eq:elman_s}{{2.30}{21}}
+\newlabel{eq:elman_y}{{2.31}{21}}
+\newlabel{eq:newj_s}{{2.32}{21}}
+\newlabel{eq:newj_y}{{2.33}{21}}
+\newlabel{eq:jordan_s}{{2.34}{21}}
+\newlabel{eq:jordan_y}{{2.35}{21}}
 \citation{sh97}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.3}Long Short-Term Memory}{20}}
-\newlabel{eq:rnn_deriv}{{1.32}{20}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Long Short-Term Memory}{22}}
+\newlabel{eq:rnn_deriv}{{2.36}{22}}
 \citation{fg00}
 \citation{fg00_2}
-\newlabel{eq:lstm_start}{{1.35}{21}}
-\newlabel{eq:lstm_end}{{1.39}{21}}
-\newlabel{eq:forget_1}{{1.40}{21}}
-\newlabel{eq:forget_2}{{1.41}{21}}
-\newlabel{eq:peephole}{{1.42}{21}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.4}Training RNN's}{22}}
-\newlabel{sec:rnn_training}{{1.4.4}{22}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.5}Numerical Representation of Language}{22}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.5.1}Bag-of-words}{22}}
-\newlabel{sec:bow}{{1.5.1}{22}}
-\@writefile{lot}{\contentsline {table}{\numberline {1.1}{\ignorespaces Hash table representation of a multiset\relax }}{23}}
-\newlabel{tab:hash}{{1.1}{23}}
+\newlabel{eq:lstm_start}{{2.39}{23}}
+\newlabel{eq:lstm_end}{{2.43}{23}}
+\newlabel{eq:forget_1}{{2.44}{23}}
+\newlabel{eq:forget_2}{{2.45}{23}}
+\citation{wz14}
+\newlabel{eq:peephole}{{2.46}{24}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.4}Training RNN's}{24}}
+\newlabel{sec:rnn_training}{{2.4.4}{24}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Numerical Representation of Language}{25}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}Bag-of-words}{25}}
+\newlabel{sec:bow}{{2.5.1}{25}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces Hash table representation of a multiset\relax }}{26}}
+\newlabel{tab:hash}{{2.1}{26}}
 \citation{cm08}
 \citation{tm13_og}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.5.2}Latent Semantic Analysis}{25}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.5.3}Word2vec}{25}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Latent Semantic Analysis}{28}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}Word2vec}{28}}
+\newlabel{sec:word2vec}{{2.5.3}{28}}
+\newlabel{eq:softmax}{{2.53}{29}}
+\newlabel{eq:crossent}{{2.54}{30}}
 \citation{tm13}
+\newlabel{eq:hierarchical_softmax}{{2.55}{31}}
 \citation{mg12}
-\newlabel{eq:hierarchical_softmax}{{1.48}{28}}
-\newlabel{eq:joint}{{1.49}{28}}
-\newlabel{eq:chain}{{1.50}{28}}
+\citation{tm13}
+\newlabel{eq:joint}{{2.56}{32}}
+\newlabel{eq:chain}{{2.57}{32}}
+\newlabel{eq:neg}{{2.59}{32}}
 \citation{tm13}
 \citation{tm13}
-\newlabel{eq:neg}{{1.52}{29}}
-\newlabel{eq:pmf}{{1.53}{29}}
-\citation{tm13}
-\newlabel{eq:subsample}{{1.54}{30}}
+\newlabel{eq:pmf}{{2.60}{33}}
+\newlabel{eq:subsample}{{2.61}{33}}
 \@setckpt{background}{
-\setcounter{page}{31}
-\setcounter{equation}{54}
+\setcounter{page}{34}
+\setcounter{equation}{61}
 \setcounter{enumi}{4}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
@@ -110,13 +117,13 @@
 \setcounter{footnote}{0}
 \setcounter{mpfootnote}{0}
 \setcounter{part}{0}
-\setcounter{chapter}{1}
+\setcounter{chapter}{2}
 \setcounter{section}{5}
 \setcounter{subsection}{3}
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{7}
+\setcounter{figure}{6}
 \setcounter{table}{1}
 \setcounter{parentequation}{0}
 \setcounter{ContinuedFloat}{0}

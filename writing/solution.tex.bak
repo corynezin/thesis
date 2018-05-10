@@ -1,0 +1,259 @@
+\chapter{Exponential Windowed Searches}
+While gradients overall tend to be useful indicators for small perturbations, they are not entirely useful or accurate in predicting large differences.  This makes sense given that gradient is only a local measure of change.  Since adversarial derivation seeks to find large differences, an algorithm should not rely on the gradient alone.  We discuss three improvements here, each of which builds on the last.  Since it was found that in most cases a classification change could be achieved by replacing only one word, the base strategy focuses on this objective.  If it turns out that more replacements are required, any of the algorithms presented can be extended with an exponential search.
+
+In the case of replacing a single word, the entire search space for a given sample can be described as the cartesian product of the set of vocabulary words and the set of all sample words.  That is, if $V$ ($|V| = N$) denotes the set of vocabulary words and $S$ ($|S| = M$) denotes the set of sample words (along with their location in the sample), the search space is given by $V\times S$, with the size of the set being $|V\times S| = NM$.  It is convenient to consider sequence equivalents of $V$ and $S$: $v = (v_i)_{i=1}^N$ and $s = (s_i)_{i=1}^M$.  Let a classification function for a sample be given by $r(s)$, and let the sequence $s^{i,j}$ be given by:
+\begin{align}\label{eq:replacement_sequence}
+s^{i,j} = (s_1,s_2,\dots,s_{i-1},v_j,s_{i+1},\dots,s_M)
+\end{align}
+
+\section{Full Search}
+For the objective of finding a single adversarial replacement, we begin with the brute force solution of a full search.  Generate the full matrix: 
+\begin{align}\label{eq:class_matrix}
+M_{M,N}(\{0,1\}) \ni A_{i,j} = r(s^{i,j})
+\end{align}
+and search for the symbol that corresponds to an adversarial example.
+This method of course has the advantage of achieving the upper bound for performance in generating adversarial derivations with one-word replacements.  It has the disadvantage of being very time intensive.  Assuming the classifier's time complexity is linear in the length of the sample, this algorithm's time complexity is $T=\mathcal{O}(NM^2)$ and its space complexity is $D=\mathcal{O}(W)$, where $W$ is the number of weights stored in the model.
+
+Of course with parallel operations, we can offload some time complexity to memory complexity as illustrated in Table \ref{tab:fs_complexity}
+\begin{table}
+\centering
+\begin{tabular}{ |c|l|l| } 
+ \hline
+ Parallelization Tier & Time & Space \\ \hline
+ 0&$\mathcal{O}(NM^2)$ & $\mathcal{O}(W)$ \\ %\hline
+ 1&$\mathcal{O}(NM)$ & $\mathcal{O}(WM)$ \\ %\hline
+ 2&$\mathcal{O}(M^2)$ & $\mathcal{O}(WN)$ \\ %\hline
+ 3&$\mathcal{O}(M)$ & $\mathcal{O}(WNM)$ \\ \hline
+\end{tabular}
+\caption{Time and space complexities for full search with varying levels of parallelization.}
+\label{tab:fs_complexity}
+\end{table}
+Note that since the operation of a single recurrent neural network is not parallelizable, the time complexity will always have a factor of at least $M$ no matter how much memory or computing power is available.  With regard to the adversarial matrix $A$, the four complexities above correspond to computing one entry at a time, one row at a time, one column at a time, and computing the entire matrix in parallel, respectively.  
+
+\section{Window Search}
+As discussed in the previous section, a full search is not feasible for long samples.  Depending on how the computation is organized, the algorithm will either run out of memory or take far too long to either find a solution or determine that there isn't one.  Looking at the time complexities in Table \ref{tab:fs_complexity}, this is intuitive given that there is a quadratic dependence on $M$, the length of the sample.  As mentioned in section \ref{sec:word_emb_results}, the average length of a review is about 234 words, meaning that typically $M^2 > N$ and sometimes $M^2 \gg N$.  This paper considers two ways to deal with this quadratic growth.
+
+The simplest solution is to cap $M$ at some fixed value, $C$, and discard the rest of the sample.  we call this cap search.  As discussed in section \ref{sec:rnn_training}, this is in fact an efficient method used to train recurrent neural networks.  Since $V$ and $W$ are also fixed for a given model, this has the advantage of fixing the memory usage in any of the above scenarios.  This is desirable since available memory is a static resource which does not change from iteration to iteration, while time is more flexible.  On the other hand, this method has the obvious drawback that it may either yield an example which is not truly adversarial, or it may fail to find an adversarial example although there is one.  The time and space complexities are given in Table \ref{tab:wa_complexity}.  This search generates the entries of a matrix $A^{cs}$, which we hope is approximately the same as the top $C$ rows of $A$.  Pseudocode is given in Algorithm \ref{alg:cutoff}.
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\begin{spacing}{1.0}
+    \caption{Simple cutoff algorithm.  Note that this algorithm does not require storage of a matrix as written, but it is convenient for generalization.}
+    \Require $s$ \Comment{the sample}
+    \Require $r$ \Comment{the classifier function}
+    \Require $c$ \Comment{the class obtained}
+    \Require $C$ \Comment{the cutoff value}
+    \Require $N$ \Comment{the number of words in the vocabulary}
+    \State{$S \gets (s_1,s_2,\dots,s_C)$}
+    \For{$i = 1$ to $i = C$}
+        \For{$j = 1$ to $j = N$}
+            \State{$A^{cs}_{i,j} \gets r(S^{i,j})$}
+            \If{$A^{cs}_{i,j} \neq c $} 
+            \If{$r(s^{i,j}) \neq c$} 
+                \State{\Return $s^{i,j}$}
+            \EndIf
+            \EndIf
+        \EndFor
+    \EndFor\\
+\Return{None}
+\label{alg:cutoff}
+\end{spacing}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{table}
+\centering
+\begin{tabular}{ |c|l|l| } 
+ \hline
+ Parallelization Tier & Time & Space \\ \hline
+ 0&$\mathcal{O}(NC^2)$ & $\mathcal{O}(W)$ \\ %\hline
+ 1&$\mathcal{O}(NC)$ & $\mathcal{O}(WC)$ \\ %\hline
+ 2&$\mathcal{O}(C^2)$ & $\mathcal{O}(WN)$ \\% \hline
+ 3&$\mathcal{O}(C)$ & $\mathcal{O}(WNC)$ \\ \hline
+\end{tabular}
+\caption{Time and space complexities for full search with sample length capped at $C$.}
+\label{tab:wa_complexity}
+\end{table}
+
+It may be valuable to consider all words in a review for replacement, especially very negative or positive ones.  In this case, we would still like to find those words and therefore would like to consider every word in the sample as a candidate for replacement.  Instead of simply taking the first $C$ words of a sample, we take $C$ words surrounding our candidate word, like a sliding window, and infer for every word in the sample.  The new complexities associated with this algorithm are in Table \ref{tab:waw_complexity}.  Since $C$ is strictly less than $M$, this algorithm, which we call window search (WS), is slower and more memory intensive than the previous algorithm, but should produce more accurate results.  This search generates a matrix $A^{ws}$ which should approximate $A$.  Pseudocode for the alogirhtm is given in Algorithm \ref{alg:window_search}.
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\begin{spacing}{1.0}
+    \caption{Window Search algorithm}
+    \Require $s$ \Comment{the sample}
+    \Require $r$ \Comment{the classifier function}
+    \Require $c$ \Comment{the class obtained}
+    \Require $C$ \Comment{the window size}
+    \Require $N$ \Comment{the number of words in the vocabulary}
+    \State{$M \gets \Call{length}{s}$}
+    \Function{getWindowSubset}{M,C,n,s}
+    \State{$C \gets \Call{min}{C,M}$}
+    \State{$n1 \gets n - C//2$}
+    \State{$n2 \gets n1 + C - 1$}
+    \If{$n1 \geq 1$ and $n2 \leq M$}
+            \State{$i1 \gets n1;\text{ } i2 \gets n2$}
+        \ElsIf{$n1 < 1$ and $n2 \leq M$}
+            \State{$i1 \gets 1;\text{ } i2 \gets C$}
+        \ElsIf{$n1 \geq 1$ and $n2 \geq M$}
+            \State{$i1 \gets M-C+1;\text{ } i2 \gets M$}
+        \Else
+            \State{$i1 \gets 1;\text{ } i2 \gets M$}
+    \EndIf\\
+    \Return $(s_{i1},s_{i1+1},\dots,s_{i2})$
+    \EndFunction
+
+    \For{$i = 1$ to $i = M$}
+        \State{$S \gets \Call{getWindowSubset}{M,C,i,s}$}
+        \For{$j = 1$ to $j = N$}
+            \State{$A^{ws}_{i,j} \gets r(S^{i,j})$}
+            \If{$A^{cs}_{i,j} \neq c $}
+                \If{$r(s^{i,j}) \neq c$} 
+                    \State{\Return $s^{i,j}$}
+                \EndIf
+            \EndIf
+        \EndFor
+    \EndFor\\
+\Return{None}
+\label{alg:window_search}
+\end{spacing}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{table}
+\centering
+\begin{tabular}{ |c|l|l| } 
+ \hline
+ Parallelization Tier & Time & Space \\ \hline
+ 0&$\mathcal{O}(NMC)$ & $\mathcal{O}(W)$ \\
+ 1&$\mathcal{O}(NC)$ & $\mathcal{O}(WM)$ \\
+ 2&$\mathcal{O}(CM)$ & $\mathcal{O}(WN)$ \\
+ 3&$\mathcal{O}(C)$ & $\mathcal{O}(WNM)$ \\ \hline
+\end{tabular}
+\caption{Time and space complexities for window search with a window of size $C$.}
+\label{tab:waw_complexity}
+\end{table}
+\section{Gradient Assisted Window Search}
+Finally, we may reduce complexity even further by using the results of section \ref{sec:stochastic_gradient_analysis}.  Because we found that words associated with large gradients tend to be good words for replacement, we can reduce the effective value of $M$ in the window search algorithm.  We propose to only consider the top $K$ words for replacement, as ordered by the gradient, and perform a search over those value.  We call this method gradient assisted window search (GAWS).  The complexities are given simply by replacing $M$ by $K$ in the window search algorithm, and can be found in Table \ref{tab:gaws_complexity}.  This search generates a matrix $A^{gs}$ which should approximate $K$ rows of $A$ corresponding to the words in the original sample with the $K$ largest gradients.  Pseudocode is given in Algorithm \ref{alg:gaws}.
+\begin{algorithm}
+\begin{algorithmic}[1]
+\begin{spacing}{1.0}
+    \caption{Gradient Assisted Window Search (GAWS) algorithm.}
+    \Require $s$ \Comment{the sample}
+    \Require $r$ \Comment{the classifier function}
+    \Require $c$ \Comment{the class obtained}
+    \Require $C$ \Comment{the window size}
+    \Require $N$ \Comment{the number of words in the vocabulary}
+    \State{$M \gets \Call{length}{s}$}
+    \For{$i$ in $(1,2,\dots,M)$}
+        \State{$g_i \gets ||\nabla r(s_i)||$} \Comment{Get norm of the gradient with respect to the $i^{th}$ input}
+    \EndFor
+    \State{$I \gets \Call{topInd}{g,K}$} \Comment{Get ordered indices for K largest gradients norms}
+
+    \For{$i$ in $I$}
+        \State{$S \gets \Call{getWindowSubset}{M,C,i,s}$} \Comment{See algorithm \ref{alg:window_search} for subroutine}
+        \For{$j = 1$ to $j = N$}
+            \State{$A^{gs}_{i,j} \gets r(S^{i,j})$}
+            \If{$A^{cs}_{i,j} \neq c $}
+                \If{$r(s^{i,j}) \neq c$} 
+                    \State{\Return $s^{i,j}$}
+                \EndIf
+            \EndIf
+        \EndFor
+    \EndFor\\
+\Return{None}
+\label{alg:gaws}
+\end{spacing}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{table}
+\centering
+\begin{tabular}{ |c|l|l| } 
+ \hline
+ Parallelization Tier & Time & Space \\ \hline
+ 0&$\mathcal{O}(NKC)$ & $\mathcal{O}(W)$ \\
+ 1&$\mathcal{O}(NC)$ & $\mathcal{O}(WK)$ \\
+ 2&$\mathcal{O}(CK)$ & $\mathcal{O}(WN)$ \\
+ 3&$\mathcal{O}(C)$ & $\mathcal{O}(WNK)$ \\ \hline
+\end{tabular}
+\caption{Time and space complexities for gradient assisted window search with a window of size $C$ and taking the top $K$ words.}
+\label{tab:gaws_complexity}
+\end{table}
+\section{Multi-word Replacement}
+Up to this point, we have only considered searching for a one-word replacement adversarial derivation.  While this is sufficient for about $70\%$ of samples, there is still a need to produce derivations for the remaining $30\%$.  Multi-word derivation can be achieved efficiently with two modifications to the original algorithms.
+
+First, instead of dealing with the matrix $A$, we can deal with a more general matrix of classifier confidence levels, rather than just decisions.  Suppose that the function $p(s)$ gives the probability that a sample $s$ is class $0$.  Then in the same way we generate the matrix $A$ and all of its approximations, we can also generate the matrix $P_{i,j} = p(s^{i,j})$.  Thresholding this matrix would yield $A$ or its approximation.  Second, if no derivations are detected, we can pick the entry of $P$ with the highest or lowest value (depending on what classification we are trying to cause) and attempt using that substitution.  From this point onward, we assume the second tier of parallelization because we found that tier 3 was not feasible on the hardware used in this project.\footnote{All algorithms are run with an AMD RYZEN processor, GTX 1080 Ti GPU, and 32GB of RAM.}
+
+If replacing one word is not successful, we can select more words.  Doing this naively would lead to combinatorial explosion.  Trying every combination of $L$ words in the full search would cost roughly $\prod_{i=0}^{L-1} (M-i)N = \frac{M!}{(M-L)!}N^L$ lookups, each lookup costing $O(M)$ time.  Since the time complexity is already a restricting factor, this is not feasible even for small $L$.  We therefore implemented a fast greedy approach where the maximum is taken across all columns of $P$.  This takes $O(N)$ time and only $O(M)$ space since the min/max is taken as soon as all elements are available.  The top $L$ entries of the result are chosen as candidate replacements.  Sorting all values in the result requires $O(M\log(M))$ time.
+
+Now, we still need some method of determining the smallest value of $L$ which allows us to achieve a misclassification.  We make the assumption that replacing more words than required will still lead to a misclassification, and therefore the class vs. $L$ curve looks like a step function.  Since it is monotonic, we can use an exponential search for the transistion point which runs in $O(M\log L)$ time and $O(W+M)$ space given that all candidates have already been determined.  This will usually be better than a binary search given that the number of words being replaced, $L$ is often small compared to the size of the sample, $M$.  Adding all steps together, the final time and space complexities of the given algorithms can be found in Table \ref{tab:overall_complexity}.
+
+In order to obtain the modified pseudocode for Algorithm \ref{alg:window_search}, replace lines 20 to 25 with $P^{ws}_{i,j} \gets p(S^{i,j})$ and append Algorithm \ref{alg:exp}.  Algorithm \ref{alg:gaws} can be extended in the same way, except by replacing lines 9 to 14. 
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\begin{spacing}{1.0}
+    \caption{Exponential Search Algorithm for Multi-word Replacement}
+    \Require $s$ \Comment{the sample}
+    \Require $r$ \Comment{the classifier function}
+    \Require $c$ \Comment{the class obtained}
+    \Require $P$ \Comment{probability matrix}
+    \State{$L \gets \Call{length}{s}$}
+    \For{$i=1$ to $i=L$}
+        \If{c = 0}
+        \State{$p_i \gets \Call{min}{P_i}$; $I_i \gets \Call{argmin}{P_i}$}\Comment{$P_i$ is the $i^{th}$ row of $P$}
+        \ElsIf{c = 1}
+        \State{$p_i \gets \Call{max}{P_i}$; $I_i \gets \Call{argmax}{P_i}$}
+        \EndIf
+        \State{$J_i \gets i$}
+    \EndFor\\
+    \State{$L \gets 0$; $R \gets 1$}
+    \While{$L < R$}
+        \If{$LimitFound = False$}
+            \State{$R \gets 2\times R$}
+        \EndIf
+        \State{$m \gets (L + R) // 2$}
+        \If{$c = 1$}
+            \State{$args \gets \Call{topInd}{p,m}$}\Comment{get arguments of largest probabilities}
+        \ElsIf{$c = 1$}
+            \State{$args \gets \Call{botInd}{p,m}$}\Comment{get arguments of smallest probabilities}
+        \EndIf
+        \State{$Is \gets I[args]$; $Js \gets J[args]$ }
+        \State{$S \gets s$} 
+        \For{$i = 1$ to $m$}
+            \State{$S_{Js_i} \gets D_{Is_i}$} \Comment{$D$ is the dictionary of all words}
+        \EndFor
+        \If{$r(S) = c$ and $limitFound = True$}
+            \State{$L \gets m + 1$}
+        \ElsIf{$r(S) \neq c$}
+            \State{$limitFound \gets True$}
+            \State{$R \gets m - 1$}
+            \State{$minm \gets \Call{min}{minm,m}$}
+            \If{$m = minm$}
+                \State{$bestS \gets S$}
+            \EndIf
+        \EndIf
+    \EndWhile\\
+\If{$limitFound = True$}
+\State{\Return{$bestS$}}
+\EndIf\\
+\Return{None}
+\label{alg:exp}
+\end{spacing}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{table}
+\centering
+\begin{tabular}{ |c|c|c| } 
+ \hline
+ Method & Time & Space \\ \hline
+ Full Search & $O(M^2 + M\log(M) + M\log L)$ & $O(WN)$ \\ \hline 
+ Cap Search & $O(C^2 + M\log(M) + M\log L)$ & $O(WN)$ \\ \hline 
+ Window Search & $O(CM + M\log(M) + M\log L)$ & $O(WN)$ \\ \hline 
+ GAWS & $O(CK + K\log(K) + M\log L)$ & $O(WN)$ \\ \hline 
+\end{tabular}
+\caption{Overall time complexities for several search algorithms extended with an exponential search for multi-word replacement.  These complexities assume the second tier of parallelization found in tables \ref{tab:fs_complexity} through \ref{tab:gaws_complexity}.}
+\label{tab:overall_complexity}
+\end{table}

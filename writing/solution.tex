@@ -7,14 +7,14 @@ s^{i,j} = (s_1,s_2,\dots,s_{i-1},v_j,s_{i+1},\dots,s_M)
 \end{align}
 
 \section{Full Search}
-For the objective of finding a single adversarial replacement, we begin with the brute force solution of a full search.  Generate the full matrix: 
+For the objective of finding a single adversarial replacement, the brute force solution is simply a full search.  Generate the full matrix: 
 \begin{align}\label{eq:class_matrix}
 M_{M,N}(\{0,1\}) \ni A_{i,j} = r(s^{i,j})
 \end{align}
 and search for the symbol that corresponds to an adversarial example.
 This method of course has the advantage of achieving the upper bound for performance in generating adversarial derivations with one-word replacements.  It has the disadvantage of being very time intensive.  Assuming the classifier's time complexity is linear in the length of the sample, this algorithm's time complexity is $T=\mathcal{O}(NM^2)$ and its space complexity is $D=\mathcal{O}(W)$, where $W$ is the number of weights stored in the model.
 
-Of course with parallel operations, we can offload some time complexity to memory complexity as illustrated in Table \ref{tab:fs_complexity}
+Of course with parallel operations, time complexity can be offloaded to memory complexity as illustrated in Table \ref{tab:fs_complexity}
 \begin{table}
 \centering
 \begin{tabular}{ |c|l|l| } 
@@ -33,7 +33,7 @@ Note that since the operation of a single recurrent neural network is not parall
 \section{Window Search}
 As discussed in the previous section, a full search is not feasible for long samples.  Depending on how the computation is organized, the algorithm will either run out of memory or take far too long to either find a solution or determine that there isn't one.  Looking at the time complexities in Table \ref{tab:fs_complexity}, this is intuitive given that there is a quadratic dependence on $M$, the length of the sample.  As mentioned in section \ref{sec:word_emb_results}, the average length of a review is about 234 words, meaning that typically $M^2 > N$ and sometimes $M^2 \gg N$.  This paper considers two ways to deal with this quadratic growth.
 
-The simplest solution is to cap $M$ at some fixed value, $C$, and discard the rest of the sample.  we call this cap search.  As discussed in section \ref{sec:rnn_training}, this is in fact an efficient method used to train recurrent neural networks.  Since $V$ and $W$ are also fixed for a given model, this has the advantage of fixing the memory usage in any of the above scenarios.  This is desirable since available memory is a static resource which does not change from iteration to iteration, while time is more flexible.  On the other hand, this method has the obvious drawback that it may either yield an example which is not truly adversarial, or it may fail to find an adversarial example although there is one.  The time and space complexities are given in Table \ref{tab:wa_complexity}.  This search generates the entries of a matrix $A^{cs}$, which we hope is approximately the same as the top $C$ rows of $A$.  Pseudocode is given in Algorithm \ref{alg:cutoff}.
+The simplest solution is to cap $M$ at some fixed value, $C$, and discard the rest of the sample.  This method is called cap search.  As discussed in section \ref{sec:rnn_training}, this is in fact an efficient method used to train recurrent neural networks.  Since $V$ and $W$ are also fixed for a given model, this has the advantage of fixing the memory usage in any of the above scenarios.  This is desirable since available memory is a static resource which does not change from iteration to iteration, while time is more flexible.  On the other hand, this method has the obvious drawback that it may either yield an example which is not truly adversarial, or it may fail to find an adversarial example although there is one.  The time and space complexities are given in Table \ref{tab:wa_complexity}.  This search generates the entries of a matrix $A^{cs}$, which we hope is approximately the same as the top $C$ rows of $A$.  Pseudocode is given in Algorithm \ref{alg:cutoff}.
 
 \begin{algorithm}
 \begin{algorithmic}[1]
@@ -75,7 +75,7 @@ The simplest solution is to cap $M$ at some fixed value, $C$, and discard the re
 \label{tab:wa_complexity}
 \end{table}
 
-It may be valuable to consider all words in a review for replacement, especially very negative or positive ones.  In this case, we would still like to find those words and therefore would like to consider every word in the sample as a candidate for replacement.  Instead of simply taking the first $C$ words of a sample, we take $C$ words surrounding our candidate word, like a sliding window, and infer for every word in the sample.  The new complexities associated with this algorithm are in Table \ref{tab:waw_complexity}.  Since $C$ is strictly less than $M$, this algorithm, which we call window search (WS), is slower and more memory intensive than the previous algorithm, but should produce more accurate results.  This search generates a matrix $A^{ws}$ which should approximate $A$.  Pseudocode for the algorithm is given in Algorithm \ref{alg:window_search}.
+It may be valuable to consider all words in a review for replacement, especially very negative or positive ones.  In this case, the algorithm should still find those words and therefore should consider every word in the sample as a candidate for replacement.  Instead of simply taking the first $C$ words of a sample, take $C$ words surrounding our candidate word, like a sliding window, and infer for every word in the sample.  The new complexities associated with this algorithm are in Table \ref{tab:waw_complexity}.  Since $C$ is strictly less than $M$, this algorithm, called window search (WS), is slower and more memory intensive than the previous algorithm, but should produce more accurate results.  This search generates a matrix $A^{ws}$ which should approximate $A$.  Pseudocode for the algorithm is given in Algorithm \ref{alg:window_search}.
 
 \begin{algorithm}
 \begin{algorithmic}[1]
@@ -134,7 +134,7 @@ It may be valuable to consider all words in a review for replacement, especially
 \label{tab:waw_complexity}
 \end{table}
 \section{Gradient Assisted Window Search}
-Finally, we may reduce complexity even further by using the results of section \ref{sec:stochastic_gradient_analysis}.  Because we found that words associated with large gradients tend to be good words for replacement, we can reduce the effective value of $M$ in the window search algorithm.  We propose to only consider the top $K$ words for replacement, as ordered by the gradient, and perform a search over those value.  We call this method gradient assisted window search (GAWS).  The complexities are given simply by replacing $M$ by $K$ in the window search algorithm, and can be found in Table \ref{tab:gaws_complexity}.  This search generates a matrix $A^{gs}$ which should approximate $K$ rows of $A$ corresponding to the words in the original sample with the $K$ largest gradients.  Pseudocode is given in Algorithm \ref{alg:gaws}.
+Finally, the complexity may be reduced even further by using the results of section \ref{sec:stochastic_gradient_analysis}.  Because it was found that words associated with large gradients tend to be good words for replacement, the effective value of $M$ can be reduced in the window search algorithm.  We propose to only consider the top $K$ words for replacement, as ordered by the gradient, and perform a search over those value. This method is called gradient assisted window search (GAWS).  The complexities are given simply by replacing $M$ by $K$ in the window search algorithm, and can be found in Table \ref{tab:gaws_complexity}.  This search generates a matrix $A^{gs}$ which should approximate $K$ rows of $A$ corresponding to the words in the original sample with the $K$ largest gradients.  Pseudocode is given in Algorithm \ref{alg:gaws}.
 \begin{algorithm}
 \begin{algorithmic}[1]
 \begin{spacing}{1.0}
@@ -181,13 +181,13 @@ Finally, we may reduce complexity even further by using the results of section \
 \label{tab:gaws_complexity}
 \end{table}
 \section{Multi-word Replacement}
-Up to this point, we have only considered searching for a one-word replacement adversarial derivation.  While this is sufficient for about $70\%$ of samples, there is still a need to produce derivations for the remaining $30\%$.  Multi-word derivation can be achieved efficiently with two modifications to the original algorithms.
+Up to this point, only searching for a one-word replacement adversarial derivation has been considered.  While this is sufficient for about $70\%$ of samples, there is still a need to produce derivations for the remaining $30\%$.  Multi-word derivation can be achieved efficiently with two modifications to the original algorithms.
 
-First, instead of dealing with the matrix $A$, we can deal with a more general matrix of classifier confidence levels, rather than just decisions.  Suppose that the function $p(s)$ gives the probability that a sample $s$ is class $0$.  Then in the same way we generate the matrix $A$ and all of its approximations, we can also generate the matrix $P_{i,j} = p(s^{i,j})$.  Thresholding this matrix would yield $A$ or its approximation.  Second, if no derivations are detected, we can pick the entry of $P$ with the highest or lowest value (depending on what classification we are trying to cause) and attempt using that substitution.  From this point onward, we assume the second tier of parallelization because we found that tier 3 was not feasible on the hardware used in this project.\footnote{All algorithms are run with an AMD RYZEN processor, GTX 1080 Ti GPU, and 32GB of RAM.}
+First, instead of dealing with the matrix $A$, one can utilize a more general matrix of classifier confidence levels, rather than just decisions.  Suppose that the function $p(s)$ gives the probability that a sample $s$ is class $0$.  Then in the same way the matrix $A$ is generated along with all of its approximations, the matrix $P_{i,j} = p(s^{i,j})$ can be generated in the same way.  Thresholding this matrix would yield $A$ or its approximation.  Second, if no derivations are detected, one can pick the entry of $P$ with the highest or lowest value (depending on the classification target) and attempt using that substitution.  From this point onward, this work assumes the second tier of parallelization because tier 3 was not feasible on the hardware used in this project.\footnote{All algorithms are run with an AMD RYZEN processor, GTX 1080 Ti GPU, and 32GB of RAM.}
 
-If replacing one word is not successful, we can select more words.  Doing this naively would lead to combinatorial explosion.  Trying every combination of $L$ words in the full search would cost roughly $\prod_{i=0}^{L-1} (M-i)N = \frac{M!}{(M-L)!}N^L$ lookups, each lookup costing $O(M)$ time.  Since the time complexity is already a restricting factor, this is not feasible even for small $L$.  We therefore implemented a fast greedy approach where the maximum is taken across all columns of $P$.  This takes $O(N)$ time and only $O(M)$ space since the min/max is taken as soon as all elements are available.  The top $L$ entries of the result are chosen as candidate replacements.  Sorting all values in the result requires $O(M\log(M))$ time.
+If replacing one word is not successful, the algorithm may select more words.  Doing this naively would lead to combinatorial explosion.  Trying every combination of $L$ words in the full search would cost roughly $\prod_{i=0}^{L-1} (M-i)N = \frac{M!}{(M-L)!}N^L$ lookups, each lookup costing $\mathcal{O}(M)$ time.  Since the time complexity is already a restricting factor, this is not feasible even for small $L$.  We therefore implemented a fast greedy approach where the maximum is taken across all columns of $P$.  This takes $\mathcal{O}(N)$ time and only $\mathcal{O}(M)$ space since the min/max is taken as soon as all elements are available.  The top $L$ entries of the result are chosen as candidate replacements.  Sorting all values in the result requires $\mathcal{O}(M\log(M))$ time.
 
-Now, we still need some method of determining the smallest value of $L$ which allows us to achieve a misclassification.  We make the assumption that replacing more words than required will still lead to a misclassification, and therefore the class vs. $L$ curve looks like a step function.  Since it is monotonic, we can use an exponential search for the transition point which runs in $O(M\log L)$ time and $O(W+M)$ space given that all candidates have already been determined.  This will usually be better than a binary search given that the number of words being replaced, $L$ is often small compared to the size of the sample, $M$.  Adding all steps together, the final time and space complexities of the given algorithms can be found in Table \ref{tab:overall_complexity}.
+Now, some method of determining the smallest value of $L$ which allows us to achieve a misclassification is still required.  We assume that replacing more words than required will still lead to a misclassification, and therefore the class vs. $L$ curve looks like a step function.  Since it is monotonic, we can use an exponential search for the transition point which runs in $\mathcal{O}(M\log L)$ time and $\mathcal{O}(W+M)$ space given that all candidates have already been determined.  This will usually be better than a binary search given that the number of words being replaced, $L$ is often small compared to the size of the sample, $M$.  Adding all steps together, the final time and space complexities of the given algorithms can be found in Table \ref{tab:overall_complexity}.
 
 In order to obtain the modified pseudocode for Algorithm \ref{alg:window_search}, replace lines 20 to 25 with $P^{ws}_{i,j} \gets p(S^{i,j})$ and append Algorithm \ref{alg:exp}.  Algorithm \ref{alg:gaws} can be extended in the same way, except by replacing lines 9 to 14. 
 
@@ -249,10 +249,10 @@ In order to obtain the modified pseudocode for Algorithm \ref{alg:window_search}
 \begin{tabular}{ |c|c|c| } 
  \hline
  Method & Time & Space \\ \hline
- Full Search & $O(M^2 + M\log(M) + M\log L)$ & $O(WN)$ \\ \hline 
- Cap Search & $O(C^2 + M\log(M) + M\log L)$ & $O(WN)$ \\ \hline 
- Window Search & $O(CM + M\log(M) + M\log L)$ & $O(WN)$ \\ \hline 
- GAWS & $O(CK + K\log(K) + M\log L)$ & $O(WN)$ \\ \hline 
+ Full Search & $\mathcal{O}(M^2 + M\log(M) + M\log L)$ & $\mathcal{O}(WN)$ \\ \hline 
+ Cap Search & $\mathcal{O}(C^2 + C\log(C) + M\log L)$ & $\mathcal{O}(WN)$ \\ \hline 
+ Window Search & $\mathcal{O}(CM + M\log(M) + M\log L)$ & $\mathcal{O}(WN)$ \\ \hline 
+ GAWS & $\mathcal{O}(CK + K\log(K) + M\log L)$ & $\mathcal{O}(WN)$ \\ \hline 
 \end{tabular}
 \caption{Overall time complexities for several search algorithms extended with an exponential search for multi-word replacement.  These complexities assume the second tier of parallelization found in tables \ref{tab:fs_complexity} through \ref{tab:gaws_complexity}.}
 \label{tab:overall_complexity}

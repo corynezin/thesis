@@ -1,0 +1,23 @@
+Add slide about gradient descent?
+
+Descriptions:
+    1. Full Search
+    2. Cap Search
+    3. Window Search
+    4. Gradient Assisted Window Search
+    5. Exponential Search
+    6. Multi-Word Search Extension
+
+Results:
+    1. White Box
+    2. Gray Box
+    3. Black Box
+
+Conclusion:
+    1. It worked, yay
+    2. Future Improvements
+    3. Future Defenses
+
+Acknowledgements
+
+Questions

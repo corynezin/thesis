@@ -2,12 +2,17 @@ This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: main.aux
 The style file: IEEEtran.bst
+A level-1 auxiliary file: title.aux
+A level-1 auxiliary file: signature.aux
+A level-1 auxiliary file: acknowledgements.aux
 A level-1 auxiliary file: abstract.aux
+A level-1 auxiliary file: introduction.aux
 A level-1 auxiliary file: background.aux
 A level-1 auxiliary file: problem.aux
 A level-1 auxiliary file: solution.aux
 A level-1 auxiliary file: results.aux
 A level-1 auxiliary file: conclusion.aux
+A level-1 auxiliary file: appendix.aux
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
@@ -20,45 +25,45 @@ Database file #1: references.bib
 Warning--missing institution in fg00_2
 
 Done.
-You've used 16 entries,
+You've used 25 entries,
             4087 wiz_defined-function locations,
-            924 strings with 9886 characters,
-and the built_in function-call counts, 10289 in all, are:
-= -- 827
-> -- 240
-< -- 69
-+ -- 132
-- -- 44
-* -- 489
-:= -- 1642
-add.period$ -- 33
-call.type$ -- 16
-change.case$ -- 14
-chr.to.int$ -- 156
-cite$ -- 17
-duplicate$ -- 766
-empty$ -- 832
-format.name$ -- 56
-if$ -- 2362
+            978 strings with 12147 characters,
+and the built_in function-call counts, 15936 in all, are:
+= -- 1230
+> -- 481
+< -- 83
++ -- 252
+- -- 101
+* -- 761
+:= -- 2530
+add.period$ -- 51
+call.type$ -- 25
+change.case$ -- 22
+chr.to.int$ -- 180
+cite$ -- 26
+duplicate$ -- 1190
+empty$ -- 1291
+format.name$ -- 118
+if$ -- 3646
 int.to.chr$ -- 0
-int.to.str$ -- 16
-missing$ -- 133
-newline$ -- 79
-num.names$ -- 16
-pop$ -- 313
+int.to.str$ -- 25
+missing$ -- 238
+newline$ -- 114
+num.names$ -- 25
+pop$ -- 589
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 796
+skip$ -- 1217
 stack$ -- 0
-substring$ -- 378
-swap$ -- 588
-text.length$ -- 17
+substring$ -- 442
+swap$ -- 898
+text.length$ -- 23
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 16
+type$ -- 25
 warning$ -- 1
-while$ -- 38
-width$ -- 18
-write$ -- 177
+while$ -- 51
+width$ -- 27
+write$ -- 266
 (There was 1 warning)
